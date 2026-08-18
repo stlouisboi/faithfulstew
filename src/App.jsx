@@ -183,22 +183,37 @@ function ShareWidget() {
 /* Header                                                             */
 /* ------------------------------------------------------------------ */
 
+const NAV_LINKS = [
+  { label: 'Home', href: '#top' },
+  { label: 'Assessment', href: '#assessment' },
+  { label: 'The Book', href: '#the-book' },
+  { label: 'Workbook', href: '#workbook' },
+  { label: 'About', href: '#about' },
+]
+
 function Header() {
   const [open, setOpen] = useState(false)
-  const links = ['Manifesto', 'Framework', 'The Book', 'About']
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-border-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 h-20 md:h-24 flex items-center justify-between gap-4">
-        <a href="#top" className="shrink-0 min-w-0">
-          <Wordmark />
-        </a>
+        <div className="flex items-center gap-4 min-w-0">
+          <a href="#top" className="shrink-0">
+            <Wordmark />
+          </a>
+          <div className="hidden lg:flex items-center gap-4">
+            <span className="w-px h-10 bg-gold/70" />
+            <p className="text-[10px] leading-[1.45] tracking-[0.12em] uppercase text-ink-tertiary max-w-[76px]">
+              Business Under God&rsquo;s Authority
+            </p>
+          </div>
+        </div>
 
-        <nav className="hidden lg:flex items-center gap-10">
-          {links.map((label) => (
+        <nav className="hidden lg:flex items-center gap-6">
+          {NAV_LINKS.map(({ label, href }) => (
             <a
               key={label}
-              href={`#${label.toLowerCase().replace(/\s+/g, '-')}`}
+              href={href}
               className="text-sm tracking-wide text-ink-secondary hover:text-ink transition-colors"
             >
               {label}
@@ -209,7 +224,7 @@ function Header() {
         <div className="hidden lg:block">
           <a
             href="#assessment"
-            className="inline-flex items-center border border-ink px-6 py-3 text-sm tracking-wide text-ink hover:bg-ink hover:text-cream transition-colors duration-300"
+            className="inline-flex items-center bg-ink text-cream px-5 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-ink/90 transition-colors duration-300"
           >
             Take Assessment
           </a>
@@ -226,10 +241,10 @@ function Header() {
 
       {open && (
         <div className="lg:hidden border-t border-border-light bg-cream px-6 py-8 flex flex-col gap-6">
-          {links.map((label) => (
+          {NAV_LINKS.map(({ label, href }) => (
             <a
               key={label}
-              href={`#${label.toLowerCase().replace(/\s+/g, '-')}`}
+              href={href}
               onClick={() => setOpen(false)}
               className="text-base tracking-wide text-ink-secondary hover:text-ink transition-colors"
             >
@@ -239,7 +254,7 @@ function Header() {
           <a
             href="#assessment"
             onClick={() => setOpen(false)}
-            className="inline-flex items-center justify-center border border-ink px-6 py-3 text-sm tracking-wide text-ink hover:bg-ink hover:text-cream transition-colors duration-300"
+            className="inline-flex items-center justify-center bg-ink text-cream px-6 py-3 text-xs font-semibold uppercase tracking-wider hover:bg-ink/90 transition-colors duration-300"
           >
             Take Assessment
           </a>
@@ -454,7 +469,7 @@ function BookFeature() {
         >
           <div className="relative aspect-[2/3] max-w-sm mx-auto border border-border-dark shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)]">
             <img
-              src="/book-cover.png"
+              src="/book-cover.webp"
               alt="Kingdom Before Company book cover"
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -482,6 +497,7 @@ function BookFeature() {
         </motion.div>
 
         <motion.div
+          id="workbook"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
