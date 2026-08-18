@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-cream text-ink font-sans leading-[1.75] antialiased;
+  font-size: 1rem;
+}
+
+@screen lg {
+  body {
+    font-size: 1.125rem;
+  }
+}
