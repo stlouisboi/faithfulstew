@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only testing for The Faithful Steward Vite/React marketing site. Verified all 13 routes render without console errors (including 404 fallback), navbar+CTA+footer navigation via data-testid, and thoroughly validated the Decision Test interactive quiz (the highest-priority feature). Quiz click-to-select works, Next button correctly toggles disabled/enabled based on selection, progress counter advances 1..7, final button label switches to 'See My Result', result view shows the correct weakest lens, and Retake resets state. No React.StrictMode + framer-motion AnimatePresence interaction issues observed. Book and Workbook pages render Coming Soon buttons and images correctly. Email capture form uses native required-field validation which blocks empty submissions client-side (as expected).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Navbar", "issues": ["'Business Under God's Authority' tagline and adjacent Home/Decision Test/Take The Test link labels wrap onto two lines at 1440px viewport due to tight spacing — minor visual polish issue, not a functional bug"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "EmailCapture.jsx: relies on native HTML5 required validation only — fine for V1 but consider explicit email-format validation feedback on blur.",
+    "DecisionTest.jsx weakestLens logic uses strict '<' so ties resolve to the first-encountered lens; acceptable for V1 but worth documenting.",
+    "All /api/* calls will fail in Vercel preview environments other than production — as documented, out of scope."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All 7 quiz lens ids in order: authority, motives, method, stewardship, people, faithfulness, eternity. data-testids all present and working. Preview URL: https://daa60710-348a-4d06-8313-b6d62e75d1ce.preview.emergentagent.com. /api/subscribe is expected to fail in preview — do not report as bug. Site is static Vite on port 3000, not standard CRA.",
+  "rca of the issue": "N/A — no issues found. The previously suspected React.StrictMode + framer-motion AnimatePresence mode='wait' issue was ruled out by successfully running full 7-question quiz flow with click selection persisting between clicks and screenshots."
+}
