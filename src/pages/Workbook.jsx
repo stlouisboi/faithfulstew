@@ -10,7 +10,7 @@ import { WORKBOOK, EASE } from '../lib/site'
 const VALUE_STACK = [
   { Icon: FileText, label: '30 chapter-aligned tools' },
   { Icon: Printer, label: 'Printable 82-page workbook' },
-  { Icon: PenLine, label: 'Fillable version included at launch' },
+  { Icon: PenLine, label: 'Fillable version included for founding readers' },
   { Icon: Gift, label: 'First Faithful Offer bonus' },
 ]
 
