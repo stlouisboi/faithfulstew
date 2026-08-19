@@ -1,19 +1,24 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { Check } from 'lucide-react'
+import { Check, FileText, Printer, PenLine, Gift } from 'lucide-react'
 import Seo from '../components/Seo'
 import EmailCapture from '../components/EmailCapture'
 import Faq from '../components/Faq'
 import { faqsByTag } from '../data/faq'
 import { WORKBOOK, EASE } from '../lib/site'
 
-const INCLUDES = [
-  'Thirty chapter-aligned tools for real decisions',
-  'Discernment, cost-counting, and calling worksheets',
-  'Sales, pricing, and money frameworks without manipulation',
-  'Leadership, family, rest, and growth practices',
-  'Succession and release exercises for holding loosely',
-  'Personal-use license \u2014 print and reuse for yourself',
+const VALUE_STACK = [
+  { Icon: FileText, label: '30 chapter-aligned tools' },
+  { Icon: Printer, label: 'Printable 82-page workbook' },
+  { Icon: PenLine, label: 'Fillable version included at launch' },
+  { Icon: Gift, label: 'First Faithful Offer bonus' },
+]
+
+const RECEIVE = [
+  'The 82-page printable workbook',
+  'The fillable version when it is released',
+  'The First Faithful Offer bonus',
+  'Early access before public launch',
 ]
 
 export default function Workbook() {
@@ -24,7 +29,7 @@ export default function Workbook() {
       <Seo
         title="The Workbook"
         path="/workbook"
-        description={`${WORKBOOK.title} \u2014 ${WORKBOOK.subtitle}. ${WORKBOOK.price}.`}
+        description={`${WORKBOOK.title} \u2014 turn conviction into the way you actually build and lead. ${WORKBOOK.price}.`}
         image={WORKBOOK.cover}
       />
 
@@ -34,7 +39,7 @@ export default function Workbook() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE }}
-            className="lg:col-span-5"
+            className="lg:col-span-5 lg:sticky lg:top-32"
           >
             <div className="relative aspect-[2/3] max-w-sm mx-auto border border-border-light shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
               <img src={WORKBOOK.cover} alt={`${WORKBOOK.title} cover`} className="w-full h-full object-cover" />
@@ -51,52 +56,54 @@ export default function Workbook() {
             <h1 className="mt-4 font-display font-bold tracking-[-0.02em] text-4xl md:text-5xl text-ink leading-[1.1]">
               {WORKBOOK.title}
             </h1>
-            <p className="mt-4 italic text-lg md:text-xl text-ink-secondary leading-[1.6]">
-              {WORKBOOK.subtitle}
+            <p className="mt-5 font-display italic text-2xl md:text-3xl text-ink leading-[1.3]">
+              Turn conviction into the way you actually build and lead.
             </p>
 
-            <div className="mt-6 flex items-baseline gap-3">
-              <span className="font-display font-bold text-4xl text-ink">{WORKBOOK.price}</span>
-              <span className="text-sm text-ink-tertiary">one-time &middot; printable PDF</span>
-            </div>
+            <p className="mt-6 text-ink-secondary leading-[1.8]">
+              30 chapter-aligned tools for Christian entrepreneurs and business owners
+              making real decisions about money, risk, sales, people, family, growth,
+              integrity, and release.
+            </p>
 
-            <p className="mt-6 text-ink-secondary leading-[1.75]">
-              An 82-page implementation companion to {`\u201C`}Kingdom Before
-              Company.{`\u201D`} Practical tools for discernment, cost, sales,
-              money, leadership, family, rest, growth, succession, and release.
-              This is implementation&mdash;<strong className="text-ink">not a promise of business success.</strong>
+            <p className="mt-6 text-sm tracking-wide text-ink font-medium">
+              {WORKBOOK.price} one-time <span className="text-ink-tertiary">&middot;</span> Printable PDF{' '}
+              <span className="text-ink-tertiary">&middot;</span> Fillable version included at launch
             </p>
 
             <div className="mt-8">
               {live ? (
                 <a
                   href={WORKBOOK.paymentLink}
-                  className="inline-flex items-center justify-center gap-2 bg-ink text-cream px-8 py-4 text-sm md:text-base tracking-wide hover:bg-ink/90 transition-colors duration-300"
+                  className="inline-flex items-center justify-center gap-2 bg-ink text-cream px-8 py-4 text-sm md:text-base font-semibold tracking-wide hover:bg-ink/90 transition-colors duration-300"
                   data-testid="workbook-buy"
                 >
                   Buy the Workbook &middot; {WORKBOOK.price}
                 </a>
               ) : (
-                <div
-                  className="inline-flex flex-col gap-1 border border-gold/50 bg-gold/10 px-6 py-4"
-                  data-testid="workbook-coming-soon"
+                <a
+                  href="#founding"
+                  className="inline-flex items-center justify-center gap-2 bg-ink text-cream px-8 py-4 text-sm md:text-base font-semibold tracking-wide hover:bg-ink/90 transition-colors duration-300"
+                  data-testid="workbook-cta-founding"
                 >
-                  <span className="font-semibold text-ink">Coming Soon</span>
-                  <span className="text-sm text-ink-secondary">
-                    The fillable buyer version is in beta. Join the launch list below to be first in line.
-                  </span>
-                </div>
+                  Join the Founding Reader List
+                </a>
               )}
             </div>
 
-            <ul className="mt-10 space-y-4">
-              {INCLUDES.map((t) => (
-                <li key={t} className="flex items-start gap-3 text-ink-secondary leading-[1.7]">
-                  <Check size={18} className="mt-1 text-gold shrink-0" />
-                  <span>{t}</span>
-                </li>
+            {/* Value stack */}
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {VALUE_STACK.map(({ Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-3 border border-border-light bg-cream-dark px-5 py-4"
+                  data-testid={`workbook-value-${label.toLowerCase().replace(/\s+/g, '-').slice(0, 20)}`}
+                >
+                  <Icon size={20} className="text-gold shrink-0" />
+                  <span className="text-sm text-ink font-medium leading-tight">{label}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -106,25 +113,44 @@ export default function Workbook() {
         <Faq items={faqsByTag('workbook')} title="Before you buy" />
       </section>
 
-      {/* First Faithful Offer / launch list */}
-      <section className="bg-cream-dark border-t border-border-light px-6 py-24 md:py-32">
+      {/* Founding Reader Edition */}
+      <section
+        id="founding"
+        className="bg-cream-dark border-t border-border-light px-6 py-24 md:py-32 scroll-mt-24"
+      >
         <div className="max-w-2xl mx-auto">
           <div className="text-center">
-            <p className="text-sm tracking-[0.2em] uppercase text-gold font-medium">First Faithful Offer</p>
+            <p className="text-sm tracking-[0.2em] uppercase text-gold font-medium">Founding Reader Edition</p>
             <h2 className="mt-4 font-display font-bold tracking-[-0.02em] text-3xl md:text-4xl text-ink">
-              Join the workbook launch list
+              Get the Founding Reader Edition
             </h2>
             <p className="mt-4 text-ink-secondary leading-[1.7]">
-              Be first to get the fillable workbook plus a launch bonus for
-              early readers.
+              Join the launch list to receive early access, the printable workbook, the
+              fillable version when released, and the First Faithful Offer bonus.
             </p>
           </div>
+
+          <ul className="mt-10 space-y-4 max-w-md mx-auto">
+            {RECEIVE.map((t) => (
+              <li key={t} className="flex items-start gap-3 text-ink-secondary leading-[1.6]">
+                <Check size={18} className="mt-1 text-gold shrink-0" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+
           <div className="mt-10">
-            <EmailCapture buttonLabel="Join the Launch List" source="workbook" />
+            <EmailCapture buttonLabel="Join the Founding Reader List" source="workbook-founding" />
           </div>
-          <p className="mt-8 text-center text-xs text-ink-tertiary max-w-lg mx-auto">
-            Personal-use license only. Digital products are non-refundable once
-            delivered. See our <Link to="/terms" className="underline text-gold">Terms &amp; License</Link>.
+
+          <p className="mt-8 text-center text-ink font-medium leading-[1.6]">
+            No prosperity formula. No generic journal prompts.
+            <br className="hidden sm:block" /> Just practical tools for real business decisions.
+          </p>
+
+          <p className="mt-6 text-center text-xs text-ink-tertiary max-w-lg mx-auto">
+            Personal-use license only. Digital products are non-refundable once delivered.
+            See our <Link to="/terms" className="underline text-gold">Terms &amp; License</Link>.
           </p>
         </div>
       </section>

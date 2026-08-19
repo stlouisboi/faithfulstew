@@ -57,3 +57,7 @@ own GitHub → Vercel. Serverless functions (`/api/*`) run only on Vercel, not i
 - Home closing CTA restyled gold; About-the-Author section added under the flagship-message; Vince's homepage portrait given a navy/gold duotone + offset gold frame + hover color reveal.
 - ShareWidget: replaced icons with X, Facebook, Pinterest, Reddit, LinkedIn (+ copy link) via inline brand SVGs. Instagram omitted (no web share-link URL). Fixed rail centering (moved -50% offset into motion x/y so framer-motion inline transform doesn't override Tailwind translate).
 - Verified by testing agent iteration_3: header responsive at 768/1024/1180/1280/1440, share hrefs correct, no console errors on all 11 routes, assessment completes.
+
+## Update (2026-06-19) — Workbook conversion copy + Footer restyle
+- Footer: clean horizontal lockup (wordmark + gold divider + tagline), rule, site links left / legal right, copyright.
+- Workbook page copy upgrade (design unchanged): outcome subhead "Turn conviction into the way you actually build and lead."; benefit description; price line "$27 one-time · Printable PDF · Fillable version included at launch"; 4-item value stack (30 tools / printable 82-page / fillable at launch / First Faithful Offer bonus); "Get the Founding Reader Edition" offer with "You will receive" list + reassurance ("No prosperity formula…"); CTA "Join the Founding Reader List" (scrolls to #founding). EmailCapture source=workbook-founding.
