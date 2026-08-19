@@ -10,6 +10,7 @@ export default function EmailCapture({
   resultTag = '',
   presetStage = '',
   variant = 'light',
+  note = 'We respect your inbox. Unsubscribe anytime. No spam, ever.',
   onSuccess,
 }) {
   const dark = variant === 'dark'
@@ -151,7 +152,7 @@ export default function EmailCapture({
           {message}
         </p>
       )}
-      <p className={helperClass}>We respect your inbox. Unsubscribe anytime. No spam, ever.</p>
+      <p className={helperClass}>{note}</p>
     </form>
   )
 }

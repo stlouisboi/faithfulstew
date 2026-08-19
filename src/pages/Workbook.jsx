@@ -125,7 +125,7 @@ export default function Workbook() {
               Get the Founding Reader Edition
             </h2>
             <p className="mt-4 text-ink-secondary leading-[1.7]">
-              Join the launch list to receive early access, the printable workbook, the
+              Join the launch list for early access to the printable workbook, the
               fillable version when released, and the First Faithful Offer bonus.
             </p>
           </div>
@@ -140,7 +140,11 @@ export default function Workbook() {
           </ul>
 
           <div className="mt-10">
-            <EmailCapture buttonLabel="Join the Founding Reader List" source="workbook-founding" />
+            <EmailCapture
+              buttonLabel="Reserve My Founding Reader Edition"
+              source="workbook-founding"
+              note="No spam. Just launch details and practical resources for faithful business stewardship."
+            />
           </div>
 
           <p className="mt-8 text-center text-ink font-medium leading-[1.6]">
