@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only Playwright testing of the new rule-based 'Before You Say Yes' assessment at /decision-test. Verified hero title/subhead, all 7 questions in exact order with exact option counts (stage 7, decision 8, pressure 8, cost 9, tested 8, method 7, attachment 6), progress counter 'Question X of 7', Next disabled until answered, gold highlight on single-select, final button label 'See My Result'. Fully verified cost multi-select behavior (multiple simultaneous selections with check icons, exclusive options idx7/idx8 clearing others, normal option clearing exclusive, deselect-all re-disabling Next). All 5 result paths branch correctly (Move With Wisdom, Slow Down and Test + 6 example bullets, Bring People Into the Decision, Protect the Method via compromise, Return to the Foundation via attachment=push AND via cost=notclear). Result view checks: 'Your next move' box, italic remember quote, universal closing motto, dark navy email-capture-form renders, Explore the Book CTA -> /book, Retake resets to Question 1 with Next disabled. Regression: /, /book, /workbook, /faq load with ZERO console errors and Home hero shows 'Take the Free Assessment'. 100% pass, no bugs found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Navbar", "issues": ["Navbar CTA still reads 'TAKE THE TEST' and the nav link 'Decision Test' while the Home hero CTA and the page itself are now branded 'Before You Say Yes' / 'Take the Free Assessment' - copy inconsistency", "'Business Under God's Authority' tagline still wraps onto 4 lines and crowds the nav links at 1920px (carried over from iteration_1)"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: align navbar link/CTA copy ('Decision Test' / 'TAKE THE TEST') with the new assessment naming used elsewhere ('Take the Free Assessment')"],
+  "critical_code_review_comments": [
+    "decisionTest.js computeResult priority order matches spec exactly (compromise -> foundation -> people -> test -> wisdom); verified empirically for all 5 paths.",
+    "DecisionTest.jsx toggleMulti hardcodes exclusive values ('none','notclear') instead of reading the option flag; works today but will silently break if new exclusive options are added - prefer deriving from opt.flag.",
+    "Option buttons are plain <button> for multi-select; consider role='checkbox' + aria-checked for accessibility (cosmetic/a11y only)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "None required (public static site)",
+  "context_for_next_testing_agent": "Question order/ids: stage, decision, pressure, cost(multi), tested, method, attachment. Selectors: test-option-{qid}-{index}, test-next, test-back, test-retake, decision-test-quiz, decision-test-result, email-capture-form, result-explore-book. Selection state detected via 'border-gold' in class. Progress text is the first span inside [data-testid=decision-test-quiz]. Avoid regex text locators (escaping breaks in tool). /api/subscribe submission is expected to fail in preview - out of scope, only render was verified.",
+  "rca_of_the_issue": "N/A - no functional defects found."
+}

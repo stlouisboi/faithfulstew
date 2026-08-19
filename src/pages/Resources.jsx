@@ -7,10 +7,10 @@ import EmailCapture from '../components/EmailCapture'
 const RESOURCES = [
   {
     Icon: ClipboardCheck,
-    title: 'The Decision Test',
-    desc: 'A free seven-question assessment that reveals your biggest stewardship tension.',
+    title: 'Before You Say Yes',
+    desc: 'A free seven-question decision check for Christian entrepreneurs and owners facing a significant business decision.',
     to: '/decision-test',
-    cta: 'Take the test',
+    cta: 'Take the check',
     ready: true,
   },
   {

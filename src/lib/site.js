@@ -33,15 +33,25 @@ export const WORKBOOK = {
   paymentLink: import.meta.env.VITE_STRIPE_PAYMENT_LINK || '',
 }
 
-// Primary navigation (V1)
+// Primary navigation (top bar) — kept short so it fits alongside the wordmark.
 export const NAV_LINKS = [
   { label: 'Home', to: '/' },
-  { label: 'Book', to: '/book' },
-  { label: 'Decision Test', to: '/decision-test' },
+  { label: 'Assessment', to: '/decision-test' },
+  { label: 'The Book', to: '/book' },
+  { label: 'Workbook', to: '/workbook' },
+  { label: 'About', to: '/about' },
+]
+
+// Fuller navigation used in the footer.
+export const FOOTER_LINKS = [
+  { label: 'Home', to: '/' },
+  { label: 'Assessment', to: '/decision-test' },
+  { label: 'The Book', to: '/book' },
   { label: 'Workbook', to: '/workbook' },
   { label: 'About', to: '/about' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' },
+  { label: 'FAQ', to: '/faq' },
 ]
 
 export const LEGAL_LINKS = [

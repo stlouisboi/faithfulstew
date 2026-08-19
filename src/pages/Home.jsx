@@ -101,12 +101,66 @@ function FinalCta() {
         <div className="mt-12">
           <Link
             to="/decision-test"
-            className="inline-flex items-center gap-2 bg-ink text-cream px-8 py-4 text-sm md:text-base tracking-wide hover:bg-ink/90 transition-colors duration-300"
+            className="inline-flex items-center gap-2 bg-gold text-navy font-semibold px-8 py-4 text-sm md:text-base tracking-wide hover:bg-gold/90 transition-colors duration-300"
             data-testid="home-final-cta"
           >
-            Take the Free Decision Test
+            Take the Free Assessment
           </Link>
         </div>
+      </div>
+    </section>
+  )
+}
+
+function AboutTeaser() {
+  return (
+    <section className="bg-cream px-6 py-24 md:py-32" data-testid="home-about-author">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="lg:col-span-5"
+        >
+          <div className="relative bg-cream-dark border border-border-light overflow-hidden max-w-sm mx-auto lg:mx-0">
+            <img src="/vince-lawrence.png" alt="Vince Lawrence" className="w-full h-auto object-cover" />
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
+          className="lg:col-span-7"
+        >
+          <p className="text-sm tracking-[0.2em] uppercase text-gold font-medium">About the Author</p>
+          <h2 className="mt-4 font-display font-bold tracking-[-0.02em] text-3xl md:text-4xl text-ink leading-[1.1]">
+            Vince Lawrence
+          </h2>
+          <div className="mt-6 space-y-5 text-ink-secondary leading-[1.8]">
+            <p>
+              Vince Lawrence is a U.S. Navy veteran, entrepreneur, and safety and
+              compliance professional whose work spans operations, logistics,
+              leadership, and building organizations that operate with clarity and
+              integrity.
+            </p>
+            <p>
+              He believes business is a stewardship assignment&mdash;that how you
+              build matters as much as what you build. That conviction became the
+              foundation for <em className="font-display text-ink">Kingdom Before Company</em>.
+            </p>
+          </div>
+          <Link
+            to="/about"
+            className="mt-8 inline-flex items-center gap-2 text-sm tracking-wide text-ink hover:text-gold transition-colors group"
+            data-testid="home-about-link"
+          >
+            Read Vince&rsquo;s full story
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   )
@@ -120,6 +174,7 @@ export default function Home() {
       <Tension />
       <Framework />
       <BookTeaser />
+      <AboutTeaser />
       <FinalCta />
     </>
   )

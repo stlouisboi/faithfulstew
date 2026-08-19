@@ -200,7 +200,7 @@ export default function Book() {
               className="inline-flex items-center gap-2 text-sm tracking-wide text-ink-secondary hover:text-ink transition-colors"
               data-testid="book-to-test"
             >
-              Take the Free Decision Test
+              Take the Free Assessment
             </Link>
           </div>
         </div>

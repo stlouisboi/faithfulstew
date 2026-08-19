@@ -28,11 +28,11 @@ export default function Hero() {
             className="inline-flex items-center gap-2 bg-ink text-cream px-8 py-4 text-sm md:text-base tracking-wide hover:bg-ink/90 transition-colors duration-300"
             data-testid="hero-cta-decision-test"
           >
-            Take the Free Decision Test
+            Take the Free Assessment
           </Link>
           <p className="text-sm text-ink-tertiary max-w-md">
-            Seven questions to reveal the business tension most likely to pull
-            you away from faithful stewardship.
+            &ldquo;Before You Say Yes&rdquo; &mdash; seven questions to help you
+            slow down before pressure writes the answer.
           </p>
         </div>
 
