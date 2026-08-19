@@ -1,0 +1,45 @@
+{
+  "summary": "Frontend-only regression of 'The Faithful Steward' static Vite site against the 4 reported fixes. Explicitly tested the responsive header at 768/1024/1180/1280/1440, the share widget (vertical + horizontal rails), display typography weights, all 11 routes for console errors, and one full 'Before You Say Yes' assessment path. RESULT: the header bug is FIXED at every tested width (no overlap, no horizontal page overflow), share widget is correct (X/Facebook/Pinterest/Reddit/LinkedIn, no Instagram, working Copied! tooltip), typography weights are correct (h1=800, p=500), and all routes load with ZERO console/page errors. ONE new bug found: both floating share rails are mis-positioned because motion/react's inline transform overrides Tailwind's -translate-x-1/2 / -translate-y-1/2 — the horizontal mobile rail is clipped off the right edge at <=390px (copy-link button unreachable).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ShareWidget (horizontal mobile rail)",
+        "issue": "Rail overflows the right edge on small phones: at 390px viewport the rail spans left=195 to right=445 (250px wide) so ~55px is off-screen and the copy-link button (left=398) is completely outside the viewport and NOT clickable. Measured: 320px -> right=410 (90px clipped), 360px -> right=430, 390px -> right=445, 767px -> OK. Cause: the element uses `left-1/2 -translate-x-1/2`, but motion.div animates `x` and writes an inline `transform: translateX(0px)` that overrides the Tailwind -translate-x-1/2 class, so the rail is never centered.",
+        "selector": "[data-testid=\"share-copy-horizontal\"] / .md:hidden.fixed.bottom-6.left-1/2",
+        "priority": "HIGH"
+      },
+      {
+        "component": "ShareWidget (vertical desktop rail)",
+        "issue": "Same root cause on the vertical rail: `top-1/2 -translate-y-1/2` is overridden by motion's inline transform, so the rail hangs BELOW the vertical center instead of being centered (at 900px height it starts at y~460 and ends y~690 rather than being centred on 450). Not clipped, but visibly off-centre.",
+        "selector": "[data-testid=\"share-x-vertical\"] parent .hidden.md:flex.fixed.right-6.top-1/2",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Header / Wordmark (all widths)",
+        "issues": ["Informational only, NOT a bug: an automated overlap sweep flags the 'The' superscript overlapping the 'F' of 'FAITHFUL STEWARD' by ~25x6px. Screenshots confirm this is the intentional logotype lockup. Once the wordmark is excluded, ZERO overlaps remain in the header at 768/1024/1180/1280/1440."]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix ShareWidget centering: motion/react's animated `x`/`y` writes an inline transform that kills Tailwind's -translate-x-1/2 / -translate-y-1/2. Recommended fix: keep the translate in the motion transform itself, e.g. horizontal -> initial={{opacity:0,y:20,x:'-50%'}} animate={{opacity:1,y:0,x:'-50%'}} (and drop the -translate-x-1/2 class); vertical -> initial={{opacity:0,x:20,y:'-50%'}} animate={{opacity:1,x:0,y:'-50%'}}. Alternative: wrap the motion.div in a plain positioning div that owns left-1/2/-translate-x-1/2 and animate only opacity inside.",
+    "Optionally cap the mobile rail width (e.g. gap-0 / px-2 / smaller icons) so all 6 items fit comfortably at 320px even after centering (250px rail in a 320px viewport leaves only 35px per side)."
+  ],
+  "critical_code_review_comments": [
+    "ShareWidget.jsx: never combine Tailwind translate utilities with motion `x`/`y` animations on the same element — motion writes inline `transform` and silently wins. This is the root cause of both rail positioning bugs.",
+    "ShareWidget.jsx: the `copied` state is shared by both Rail instances, so the 'Copied!' tooltip renders in both rails simultaneously; harmless today because only one rail is visible per breakpoint, but it is fragile.",
+    "Navbar.jsx: the xl: breakpoint split is implemented correctly and verified; the mobile panel closes on link/CTA click as expected."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "N/A (skipped per request)", "frontend": "94% (32/34 checks passed)" },
+  "seed_data_creation": "None required (static site, no auth).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None required - no login on this site.",
+  "context_for_next_testing_agent": "Verified at explicit viewports: header desktop nav+tagline+CTA appear only at >=1280 (1280,1440 PASS); hamburger-only at 768,1024,1180 with all 5 nav-mobile-link-* + nav-mobile-cta working and menu auto-closing on click; document.scrollWidth == window.innerWidth at every width (no horizontal overflow). Share hrefs verified: twitter.com/intent/tweet, facebook.com/sharer, pinterest.com/pin/create, reddit.com/submit, linkedin.com/sharing; 0 Instagram buttons; Copied! tooltip appears and auto-hides after 2s. Typography: h1 computed font-weight 800 (Playfair Display), body p 500 (Inter), body 500. All 11 routes (/, /book, /decision-test, /workbook, /about, /resources, /contact, /faq, /privacy, /terms, /disclaimer) rendered an h1 with ZERO console/page errors. Assessment completed one path to data-testid=decision-test-result ('Slow Down and Test'). Nav CTA and hero CTA both href=/decision-test. IMPORTANT for next run: when checking header overlap, exclude [data-testid=nav-logo-link] subtree - the wordmark overlaps by design. /api/subscribe was not exercised (mocked/unavailable in preview, out of scope). Only remaining defect is ShareWidget rail centering.",
+  "rca_of_the_issue": "framer-motion/motion.react applies animated `x`/`y` values as an inline `transform` on the DOM node. In ShareWidget.jsx both rails rely on Tailwind classes `-translate-x-1/2` (horizontal, with left-1/2) and `-translate-y-1/2` (vertical, with top-1/2) for centering, but those utility classes also compile to `transform`, and the inline style from motion takes precedence. After the entrance animation finishes the inline transform settles at translateX(0)/translateY(0), so the centering offset is permanently lost. Reproduction: open / at 390x844, evaluate getBoundingClientRect() on the div.fixed containing [data-testid=share-copy-horizontal] -> left 195, right 445 vs window 390; the copy button sits at left 398, outside the viewport. Mitigation: move the -50% offset into motion's own x/y values (or separate the positioning wrapper from the animated element)."
+}

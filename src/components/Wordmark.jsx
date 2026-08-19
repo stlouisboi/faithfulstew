@@ -7,7 +7,7 @@ export default function Wordmark({ invert = false, variant = 'horizontal' }) {
       className={[
         'inline-flex flex-col select-none',
         stacked ? 'items-center' : 'items-start',
-        'text-[1.05rem] sm:text-[1.75rem] md:text-[2.25rem]',
+        'text-[1.05rem] sm:text-[1.4rem] md:text-[1.6rem] xl:text-[2rem]',
         color,
       ].join(' ')}
     >

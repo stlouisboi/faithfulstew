@@ -12,7 +12,7 @@ export default function Hero() {
         transition={{ duration: 0.9, ease: EASE }}
         className="max-w-4xl mx-auto text-center"
       >
-        <h1 className="font-display font-bold tracking-[-0.02em] uppercase leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-ink">
+        <h1 className="font-display font-bold tracking-[-0.02em] uppercase leading-[1.15] text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-ink">
           Put the Kingdom Before the Company.
         </h1>
 

@@ -5,10 +5,22 @@
 body {
   @apply bg-cream text-ink font-sans leading-[1.75] antialiased;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 @screen lg {
   body {
     font-size: 1.125rem;
   }
+}
+
+/* Heavier typography site-wide */
+.font-display.font-bold {
+  font-weight: 800;
+}
+
+/* Slightly heavier secondary/body copy for more presence */
+p,
+li {
+  font-weight: 500;
 }

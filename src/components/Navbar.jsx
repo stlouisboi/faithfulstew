@@ -9,8 +9,8 @@ export default function Navbar() {
 
   const linkClass = ({ isActive }) =>
     [
-      'text-sm tracking-wide transition-colors whitespace-nowrap',
-      isActive ? 'text-ink font-medium' : 'text-ink-secondary hover:text-ink',
+      'text-sm tracking-wide font-medium transition-colors whitespace-nowrap',
+      isActive ? 'text-ink' : 'text-ink-secondary hover:text-ink',
     ].join(' ')
 
   return (
@@ -20,7 +20,7 @@ export default function Navbar() {
           <Link to="/" className="shrink-0" data-testid="nav-logo-link">
             <Wordmark />
           </Link>
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden xl:flex items-center gap-4">
             <span className="w-px h-10 bg-gold/70" />
             <p className="text-[10px] leading-[1.45] tracking-[0.14em] uppercase text-ink-tertiary max-w-[86px]">
               Business Under God&rsquo;s Authority
@@ -28,7 +28,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center gap-7">
+        <div className="hidden xl:flex items-center gap-7">
           <nav className="flex items-center gap-6">
             {NAV_LINKS.map(({ label, to }) => (
               <NavLink
@@ -51,7 +51,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="lg:hidden text-ink"
+          className="xl:hidden text-ink"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
           data-testid="nav-mobile-toggle"
@@ -61,7 +61,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border-light bg-cream px-6 py-8 flex flex-col gap-6">
+        <div className="xl:hidden border-t border-border-light bg-cream px-6 py-8 flex flex-col gap-6">
           {NAV_LINKS.map(({ label, to }) => (
             <NavLink
               key={to}

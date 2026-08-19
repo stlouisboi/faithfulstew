@@ -49,3 +49,11 @@ Goal: turn the brand landing page into a proper V1 "book-and-workbook conversion
 ## Deploy notes
 Built & previewed on Emergent via `vite` dev server on port 3000. Production deploy is the user's
 own GitHub → Vercel. Serverless functions (`/api/*`) run only on Vercel, not in this preview.
+
+## Update (2026-06-19) — Responsive, typography, share widget
+- Header: full nav + tagline + "Take Assessment" CTA now show only at xl (>=1280); hamburger below that — fixes tablet/narrow overlap. Smaller wordmark on tablet.
+- Typography: global weight bump — display headings 800 (.font-display.font-bold), body/p/li 500; hero title leading opened to 1.15.
+- Nav renamed: Home · Assessment · The Book · Workbook · About (Resources/Contact/FAQ in footer).
+- Home closing CTA restyled gold; About-the-Author section added under the flagship-message; Vince's homepage portrait given a navy/gold duotone + offset gold frame + hover color reveal.
+- ShareWidget: replaced icons with X, Facebook, Pinterest, Reddit, LinkedIn (+ copy link) via inline brand SVGs. Instagram omitted (no web share-link URL). Fixed rail centering (moved -50% offset into motion x/y so framer-motion inline transform doesn't override Tailwind translate).
+- Verified by testing agent iteration_3: header responsive at 768/1024/1180/1280/1440, share hrefs correct, no console errors on all 11 routes, assessment completes.
