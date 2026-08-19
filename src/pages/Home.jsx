@@ -123,8 +123,32 @@ function AboutTeaser() {
           transition={{ duration: 0.7, ease: EASE }}
           className="lg:col-span-5"
         >
-          <div className="relative bg-cream-dark border border-border-light overflow-hidden max-w-sm mx-auto lg:mx-0">
-            <img src="/vince-lawrence.png" alt="Vince Lawrence" className="w-full h-auto object-cover" />
+          <div className="group relative max-w-sm mx-auto lg:mx-0">
+            {/* offset gold frame */}
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-4 -right-4 w-full h-full border border-gold/60 pointer-events-none transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1"
+            />
+            {/* duotone portrait */}
+            <div className="relative overflow-hidden bg-navy border border-navy">
+              <img
+                src="/vince-lawrence.png"
+                alt="Vince Lawrence"
+                className="w-full h-auto object-cover grayscale contrast-[1.05] transition-[filter] duration-700 group-hover:grayscale-0"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 bg-navy/40 mix-blend-multiply pointer-events-none transition-opacity duration-700 group-hover:opacity-0"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 bg-gold/15 mix-blend-screen pointer-events-none transition-opacity duration-700 group-hover:opacity-0"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 ring-1 ring-inset ring-cream/10 pointer-events-none"
+              />
+            </div>
           </div>
         </motion.div>
 
