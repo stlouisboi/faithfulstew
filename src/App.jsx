@@ -10,6 +10,7 @@ import Workbook from './pages/Workbook'
 import About from './pages/About'
 import Resources from './pages/Resources'
 import Contact from './pages/Contact'
+import Faq from './pages/Faq'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Disclaimer from './pages/Disclaimer'
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/disclaimer" element={<Disclaimer />} />

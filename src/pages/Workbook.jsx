@@ -3,6 +3,8 @@ import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
 import Seo from '../components/Seo'
 import EmailCapture from '../components/EmailCapture'
+import Faq from '../components/Faq'
+import { faqsByTag } from '../data/faq'
 import { WORKBOOK, EASE } from '../lib/site'
 
 const INCLUDES = [
@@ -97,6 +99,11 @@ export default function Workbook() {
             </ul>
           </motion.div>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-cream px-6 py-24 md:py-32">
+        <Faq items={faqsByTag('workbook')} title="Before you buy" />
       </section>
 
       {/* First Faithful Offer / launch list */}

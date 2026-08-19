@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { Check, ArrowRight } from 'lucide-react'
 import Seo from '../components/Seo'
+import Faq from '../components/Faq'
+import { faqsByTag } from '../data/faq'
 import { BOOK, EASE } from '../lib/site'
 
 const FOR_YOU = [
@@ -166,6 +168,11 @@ export default function Book() {
             </ul>
           </div>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-cream px-6 py-24 md:py-32">
+        <Faq items={faqsByTag('book')} title="Before you buy" />
       </section>
 
       {/* Companion CTA */}

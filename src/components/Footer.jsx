@@ -17,6 +17,9 @@ export default function Footer() {
               {label}
             </Link>
           ))}
+          <Link to="/faq" className="hover:text-cream transition-colors">
+            FAQ
+          </Link>
         </nav>
 
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-cream/40">
