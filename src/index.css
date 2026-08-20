@@ -19,6 +19,15 @@ body {
   font-weight: 800;
 }
 
+/* Consistent open leading + relaxed tracking on all big display headings.
+   Scoped to heading tags so the logo wordmark (a span) keeps its own spacing. */
+h1.font-display,
+h2.font-display,
+h3.font-display {
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
 /* Slightly heavier secondary/body copy for more presence */
 p,
 li {
