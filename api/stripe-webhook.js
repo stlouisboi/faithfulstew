@@ -70,7 +70,7 @@ export default async function handler(req, res) {
         })
       } catch (err) {
         console.error('Resend delivery failed', err)
-        // Do not fail the webhook — Stripe will retry only on non-2xx.
+        // Do not fail the webhook. Stripe will retry only on non-2xx.
       }
     } else {
       console.warn('Delivery skipped: missing email, RESEND_API_KEY, or WORKBOOK_DOWNLOAD_URL')

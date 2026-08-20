@@ -2,7 +2,7 @@ export const PILLARS = [
   {
     number: '01',
     title: 'Authority',
-    desc: 'Recognize that God owns the business; you are merely the steward managing His resources.',
+    desc: 'Recognize that God has final authority over the business. You are the steward responsible for how its resources, opportunities, and influence are used.',
   },
   {
     number: '02',
@@ -22,7 +22,7 @@ export const PILLARS = [
   {
     number: '05',
     title: 'People',
-    desc: 'Treat employees, partners, and customers as image-bearers of God, never as mere utilities for profit.',
+    desc: 'Treat customers, contractors, partners, vendors, and employees as image-bearers of God, never as mere utilities for profit.',
   },
   {
     number: '06',

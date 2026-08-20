@@ -61,3 +61,10 @@ own GitHub → Vercel. Serverless functions (`/api/*`) run only on Vercel, not i
 ## Update (2026-06-19) — Workbook conversion copy + Footer restyle
 - Footer: clean horizontal lockup (wordmark + gold divider + tagline), rule, site links left / legal right, copyright.
 - Workbook page copy upgrade (design unchanged): outcome subhead "Turn conviction into the way you actually build and lead."; benefit description; price line "$27 one-time · Printable PDF · Fillable version included at launch"; 4-item value stack (30 tools / printable 82-page / fillable at launch / First Faithful Offer bonus); "Get the Founding Reader Edition" offer with "You will receive" list + reassurance ("No prosperity formula…"); CTA "Join the Founding Reader List" (scrolls to #founding). EmailCapture source=workbook-founding.
+
+## Update (2026-06-19) — Audience positioning + assessment rework + workbook repositioning
+- Primary reader = Christian solo entrepreneurs/owner-operators (secondary: small teams). Copy updated: hero, Home tension paragraph (personal pressure), Book "Who it's for" + small-team note + description examples (clients, pricing, health, "enough is enough"), Framework Authority + People pillars.
+- Assessment "Before You Say Yes" reworked: 7 new questions (decision, fear, hope, cost[multi], unclear, method, ifnot), NO numeric score, 4 results (Move With Wisdom / Slow Down and Test / Bring People / Protect the Method) with Protect-the-Method override on any compromise. New closing wording.
+- Workbook repositioned as implementation companion ("book teaches and starts... workbook finishes and operationalizes"); added "What you will create" section with 12 named tangible outputs; removed "82-page" claim; retained later-stage tools.
+- Site-wide removal of ALL em/en dashes (unicode, &mdash;/&ndash; entities, \u2014 escapes) across copy, metadata, SEO, and even code comments. Verified zero remaining.
+- Verified by testing agent iteration_4: 100% frontend pass (all 4 result paths incl. override, multi-select exclusivity, no dashes, workbook outputs, zero console errors on 11 routes).

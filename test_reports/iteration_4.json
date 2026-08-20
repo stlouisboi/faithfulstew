@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only regression of the reworked 'Before You Say Yes' assessment (7 questions, 4 results, Protect-the-Method override), repositioned Workbook page, no-dash copy scan, and all-route console-error check. All requested behaviours verified as PASS via Playwright on the preview URL. Backend testing skipped per request.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "src/data/decisionTest.js still exports STAGES (business stage) - intentional for MailerLite email forms only; confirmed it is NOT used as a quiz question.",
+    "Em/en dashes exist only in JS source comments (api/subscribe.js, api/stripe-webhook.js) - not in visible copy, so no user-facing impact."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified: quiz order decision(7)/fear(7)/hope(6)/cost(8 multi)/unclear(7)/method(7)/ifnot(6); next disabled until answered; final label 'See My Result'; no numeric score anywhere. Result paths verified: wisdom, test (6 example bullets), people (unclear idx4 and cost idx7), method override (method idx3 and idx2 with otherwise-dirty answers). Multi-select exclusivity (idx6/idx7) and deselect-disables-next verified. Result view contains 'YOUR NEXT MOVE' (CSS uppercase - assert case-insensitively), italic remember quote, closing lead + motto, email-capture-form with 'Send My Result', result-explore-book, test-retake resets to Question 1. Workbook: hero line, governing line, '$27 one-time', 'Printable workbook (PDF)', no '82-page', all 12 OUTPUTS tools present in workbook-outputs (rendered as divs, not <li>), Founding Reader form intact. Homepage pillar titles are Authority, Motives, Method, Stewardship, People, Faithfulness, Eternity (not Provision/Legacy). Zero console errors on all 11 routes; zero em/en dashes in visible text. /api/subscribe submit not exercised (mocked/unavailable in preview).",
+  "rca_of_the_issue": "n/a - no defects found"
+}

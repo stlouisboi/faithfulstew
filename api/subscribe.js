@@ -1,8 +1,8 @@
 // Vercel serverless function: subscribe a lead to MailerLite.
 // Reads server-side env vars (never exposed to the browser).
 //   MAILERLITE_API_KEY            required
-//   MAILERLITE_GROUP_DEFAULT      optional — group all subscribers land in
-//   MAILERLITE_GROUP_DECISIONTEST optional — group for Decision Test leads
+//   MAILERLITE_GROUP_DEFAULT      optional: group all subscribers land in
+//   MAILERLITE_GROUP_DECISIONTEST optional: group for Decision Test leads
 
 const isValidEmail = (v) =>
   typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)

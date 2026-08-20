@@ -49,7 +49,7 @@ export default function EmailCapture({
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Something went wrong.')
       setStatus('ok')
-      setMessage('Thank you\u2014please check your inbox to confirm and receive your guide.')
+      setMessage('Thank you. Please check your inbox to confirm and receive your guide.')
       onSuccess?.()
     } catch (err) {
       setStatus('error')

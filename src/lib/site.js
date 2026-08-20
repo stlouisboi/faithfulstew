@@ -33,7 +33,7 @@ export const WORKBOOK = {
   paymentLink: import.meta.env.VITE_STRIPE_PAYMENT_LINK || '',
 }
 
-// Primary navigation (top bar) — kept short so it fits alongside the wordmark.
+// Primary navigation (top bar), kept short so it fits alongside the wordmark.
 export const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Assessment', to: '/decision-test' },

@@ -36,7 +36,7 @@ export default function ShareWidget() {
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : SITE.url
   const shareText =
-    'Kingdom Before Company \u2014 a biblical framework for faithful business stewardship.'
+    'Kingdom Before Company: a biblical framework for faithful business stewardship.'
   const mediaUrl = `${SITE.url}${SITE.ogImage}`
   const enc = encodeURIComponent
 

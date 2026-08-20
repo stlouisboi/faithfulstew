@@ -33,7 +33,7 @@ export default function FaqPage() {
             Questions &amp; answers
           </h1>
           <p className="mt-6 text-lg text-ink-secondary leading-[1.7]">
-            Honest answers before you commit&mdash;no hype, no promises we can&rsquo;t keep.
+            Honest answers before you commit. No hype, and no promises we cannot keep.
           </p>
         </div>
       </section>

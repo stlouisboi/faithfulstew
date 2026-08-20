@@ -66,7 +66,7 @@ export default function DecisionTest() {
       <Seo
         title={ASSESSMENT.name}
         path="/decision-test"
-        description={`${ASSESSMENT.name} \u2014 ${ASSESSMENT.tagline}`}
+        description={`${ASSESSMENT.name}: ${ASSESSMENT.tagline}`}
       />
 
       <section className="bg-cream px-6 pt-36 md:pt-44 pb-24 md:pb-32 min-h-screen">
@@ -78,7 +78,8 @@ export default function DecisionTest() {
             <h1 className="mt-4 font-display font-bold tracking-[-0.02em] text-4xl md:text-5xl text-ink leading-[1.1]">
               {ASSESSMENT.name}
             </h1>
-            <p className="mt-6 text-lg text-ink-secondary leading-[1.7]">{ASSESSMENT.subhead}</p>
+            <p className="mt-5 text-lg text-ink-secondary leading-[1.7]">{ASSESSMENT.tagline}</p>
+            <p className="mt-3 text-sm text-ink-tertiary leading-[1.6]">{ASSESSMENT.subhead}</p>
           </div>
 
           <div className="mt-14">
@@ -228,7 +229,6 @@ export default function DecisionTest() {
                       buttonLabel="Send My Result"
                       source="before-you-say-yes"
                       showStage={false}
-                      presetStage={answers.stage}
                       resultTag={result.key}
                       variant="dark"
                     />

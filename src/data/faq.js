@@ -3,19 +3,19 @@ export const FAQS = [
   {
     id: 'beginners',
     q: 'Is this for beginners?',
-    a: 'Yes. Whether you are exploring an idea, just starting, or already operating a business, the framework meets you where you are. You do not need a business degree, a certain revenue, or years of experience\u2014only a willingness to build under God\u2019s authority. Seasoned owners tend to find it clarifying too.',
+    a: 'Yes. Whether you are exploring an idea, just starting, or already operating a business, the framework meets you where you are. You do not need a business degree, a certain revenue, or years of experience. You only need a willingness to build under God\u2019s authority. Seasoned owners tend to find it clarifying too.',
     tags: ['book', 'workbook', 'general'],
   },
   {
     id: 'promise-success',
     q: 'Does it promise business success?',
-    a: 'No\u2014and that is intentional. This is not prosperity teaching. Nothing here guarantees wealth, growth, contracts, or any outcome. Prayer and integrity are not strategies for guaranteed profit, and success is not a measure of God\u2019s approval. The promise is a better way to build and steward\u2014faithfully, with open hands\u2014whatever the results.',
+    a: 'No, and that is intentional. This is not prosperity teaching. Nothing here guarantees wealth, growth, contracts, or any outcome. Prayer and integrity are not strategies for guaranteed profit, and success is not a measure of God\u2019s approval. The promise is a better way to build and steward: faithfully, with open hands, whatever the results.',
     tags: ['book', 'workbook', 'general'],
   },
   {
     id: 'need-the-book',
     q: 'Do I need the book to use the workbook?',
-    a: 'The workbook is designed as a companion and is aligned chapter-by-chapter with Kingdom Before Company, so reading the book gets you the most out of it. That said, each tool is written to stand on its own\u2014you can begin the workbook first and read alongside it.',
+    a: 'The workbook is designed as a companion and is aligned chapter-by-chapter with Kingdom Before Company, so reading the book gets you the most out of it. That said, each tool is written to stand on its own, so you can begin the workbook first and read alongside it.',
     tags: ['book', 'workbook'],
   },
   {
@@ -33,7 +33,7 @@ export const FAQS = [
   {
     id: 'where-to-buy',
     q: 'Where can I buy the book?',
-    a: 'Kingdom Before Company is available on Amazon in paperback and Kindle. Buy links go live here at launch\u2014join the list and you\u2019ll be the first to know.',
+    a: 'Kingdom Before Company is available on Amazon in paperback and Kindle. Buy links go live here at launch. Join the list and you\u2019ll be the first to know.',
     tags: ['book'],
   },
 ]

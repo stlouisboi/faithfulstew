@@ -21,6 +21,14 @@ function Tension() {
             Growth can quietly demand more time, compromise, money, attention,
             and control than you ever intended to give.
           </p>
+          <p className="text-ink-secondary">
+            When you are the one finding the clients, doing the work, watching
+            the money, making the decisions, solving the problems, and carrying
+            the risk, business pressure gets personal fast. A slow month can
+            feel like failure. A new opportunity can feel impossible to turn
+            down. And working too much can start sounding responsible because
+            everything depends on you.
+          </p>
         </div>
         <div className="mt-16 pt-10 border-t-2 border-gold max-w-xl mx-auto">
           <p className="font-display italic text-xl md:text-2xl text-ink leading-[1.5]">
@@ -65,7 +73,7 @@ function BookTeaser() {
           <p className="mt-6 text-[#E2E8F0]/90 leading-[1.75]">
             A biblical and practical guide for Christians who want to build,
             lead, and steward a business without allowing it to become their
-            master. Not a promise of wealth&mdash;a call to put business under
+            master. Not a promise of wealth, but a call to put business under
             God&rsquo;s authority.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -171,7 +179,7 @@ function AboutTeaser() {
               integrity.
             </p>
             <p>
-              He believes business is a stewardship assignment&mdash;that how you
+              He believes business is a stewardship assignment: that how you
               build matters as much as what you build. That conviction became the
               foundation for <em className="font-display text-ink">Kingdom Before Company</em>.
             </p>

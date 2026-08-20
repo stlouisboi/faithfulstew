@@ -20,7 +20,7 @@ export default function Privacy() {
           <h2>What we collect</h2>
           <p>
             When you take the Decision Test, join our email list, or contact us,
-            we collect the information you provide&mdash;typically your first name,
+            we collect the information you provide, typically your first name,
             email address, and optional business stage. We may also collect basic,
             anonymous analytics about how the site is used.
           </p>

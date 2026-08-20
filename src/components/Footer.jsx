@@ -39,7 +39,7 @@ export default function Footer() {
         </div>
 
         <p className="mt-12 text-sm text-cream/40">
-          &copy; {year} The Faithful Steward. Education only&mdash;no promise of business success.
+          &copy; {year} The Faithful Steward. Education only. No promise of business success.
         </p>
       </div>
     </footer>

@@ -7,10 +7,11 @@ import { faqsByTag } from '../data/faq'
 import { BOOK, EASE } from '../lib/site'
 
 const FOR_YOU = [
-  'You are a Christian building, leading, or dreaming of a business.',
+  'You are a Christian entrepreneur, freelancer, consultant, tradesperson, or owner-operator building a real business.',
+  'You are carrying much of the selling, serving, decision-making, and financial responsibility yourself.',
+  'You want growth, but you do not want the business to take authority over your faith, family, integrity, health, or identity.',
   'You feel the tension between ambition and obedience.',
   'You want practical wisdom, not prosperity-gospel promises.',
-  'You care about how you build, not only what you build.',
 ]
 
 const NOT_FOR_YOU = [
@@ -21,7 +22,7 @@ const NOT_FOR_YOU = [
 
 const BULLETS = [
   'Discern calling from ambition, fear, comparison, and pressure',
-  'Count the cost before you build\u2014and act faithfully without being reckless',
+  'Count the cost before you build, and act faithfully without being reckless',
   'Price, sell, market, and pursue growth without manipulation or compromise',
   'Treat profit as a tool without allowing money to become your master',
   'Protect faith, family, integrity, and rest while carrying business responsibility',
@@ -105,9 +106,10 @@ export default function Book() {
               </p>
               <p>
                 Instead, this book helps you put business under God&rsquo;s
-                authority&mdash;making decisions about motives, money, risk,
-                selling, integrity, family, time, leadership, and opportunity
-                with humility, wisdom, and open hands.
+                authority. It walks through the decisions that shape a solo
+                owner: motives, money, clients, pricing, risk, selling, time,
+                family, health, growth, opportunity, leadership, and knowing
+                when enough is enough.
               </p>
             </div>
 
@@ -155,6 +157,10 @@ export default function Book() {
                 </li>
               ))}
             </ul>
+            <p className="mt-6 text-ink-tertiary leading-[1.7] italic">
+              If you already have a small team, the principles still apply as
+              your responsibility grows.
+            </p>
           </div>
           <div>
             <h3 className="font-display font-bold text-2xl md:text-3xl text-ink">Who it&rsquo;s not for</h3>

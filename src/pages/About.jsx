@@ -8,7 +8,7 @@ export default function About() {
       <Seo
         title="About Vince Lawrence"
         path="/about"
-        description="Vince Lawrence \u2014 Navy veteran, entrepreneur, and author of Kingdom Before Company."
+        description="Vince Lawrence. Navy veteran, entrepreneur, and author of Kingdom Before Company."
         image="/vince-lawrence.png"
       />
 
@@ -52,7 +52,7 @@ export default function About() {
               </p>
               <p>
                 For more than two decades, he has worked in environments where
-                leadership has real consequences&mdash;where decisions affect
+                leadership has real consequences, where decisions affect
                 people, families, livelihoods, operational readiness, and the
                 health of an organization. His work has included frontline
                 operations, supervision, safety leadership, compliance

@@ -17,9 +17,9 @@ export default function Hero() {
         </h1>
 
         <p className="mt-8 text-base md:text-lg leading-[1.75] text-ink-secondary max-w-2xl mx-auto">
-          A biblical and practical framework for Christians who want to build,
-          lead, and steward a business without sacrificing faith, family, or
-          integrity.
+          A biblical and practical framework for Christian entrepreneurs and
+          owner-operators who want to build a real business without sacrificing
+          faith, family, integrity, health, or identity.
         </p>
 
         <div className="mt-12 flex flex-col items-center gap-4">
@@ -31,8 +31,8 @@ export default function Hero() {
             Take the Free Assessment
           </Link>
           <p className="text-sm text-ink-tertiary max-w-md">
-            &ldquo;Before You Say Yes&rdquo; &mdash; seven questions to help you
-            slow down before pressure writes the answer.
+            &ldquo;Before You Say Yes&rdquo;: seven questions to help you slow
+            down before pressure writes the answer.
           </p>
         </div>
 
