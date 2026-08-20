@@ -103,8 +103,10 @@ function FinalCta() {
   return (
     <section className="bg-cream px-6 py-28 md:py-40">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="font-display font-bold tracking-[-0.02em] leading-[1.15] text-3xl md:text-5xl lg:text-6xl text-ink">
-          Build diligently. Steward faithfully. Hold the results loosely.
+        <h2 className="font-display font-bold tracking-[-0.01em] leading-[1.2] text-4xl md:text-5xl lg:text-6xl text-ink">
+          Build diligently.<br />
+          Steward faithfully.<br />
+          Hold the results loosely.
         </h2>
         <div className="mt-12">
           <Link
