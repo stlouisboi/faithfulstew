@@ -200,11 +200,67 @@ function AboutTeaser() {
   )
 }
 
+function FilmSection() {
+  return (
+    <section className="bg-navy text-cream px-6 py-24 md:py-32" data-testid="home-film">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="lg:col-span-5 order-1"
+        >
+          <div className="relative mx-auto w-full max-w-[300px] aspect-[9/16] bg-black overflow-hidden border border-border-dark shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)]">
+            <video
+              src="/kingdom-before-company-film.mp4"
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover"
+              data-testid="home-film-video"
+            />
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
+          className="lg:col-span-7 order-2"
+        >
+          <p className="text-sm tracking-[0.2em] uppercase text-gold font-medium">Watch</p>
+          <h2 className="mt-4 font-display font-bold text-3xl md:text-4xl leading-[1.15]">
+            The business can become the master.
+          </h2>
+          <p className="mt-6 text-[#E2E8F0]/90 leading-[1.75]">
+            Revenue can become identity. Opportunity can become temptation. In
+            forty seconds, this short film names the quiet drift every
+            owner-operator feels, and points to a better way to build.
+          </p>
+          <p className="mt-8 font-display italic text-xl md:text-2xl text-gold leading-[1.4]">
+            &ldquo;What is this business forming in me?&rdquo;
+          </p>
+          <Link
+            to="/decision-test"
+            className="mt-10 inline-flex items-center gap-2 bg-cream text-navy font-semibold px-8 py-4 text-sm md:text-base tracking-wide hover:bg-cream/90 transition-colors duration-300"
+            data-testid="home-film-cta"
+          >
+            Take the Free Assessment
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 export default function Home() {
   return (
     <>
       <Seo path="/" />
       <Hero />
+      <FilmSection />
       <Tension />
       <Framework />
       <BookTeaser />
