@@ -58,7 +58,7 @@ export default function Workbook() {
             transition={{ duration: 0.8, ease: EASE }}
             className="lg:col-span-5 lg:sticky lg:top-32"
           >
-            <div className="relative aspect-[2/3] max-w-sm mx-auto border border-border-light shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
+            <div className="relative aspect-[4/5] max-w-sm mx-auto overflow-hidden shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
               <img src={WORKBOOK.cover} alt={`${WORKBOOK.title} cover`} className="w-full h-full object-cover" />
             </div>
           </motion.div>
