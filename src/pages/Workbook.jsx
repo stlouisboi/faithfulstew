@@ -47,7 +47,7 @@ export default function Workbook() {
         title="The Workbook"
         path="/workbook"
         description={`${WORKBOOK.title}: the implementation companion to Kingdom Before Company. ${WORKBOOK.price}.`}
-        image={WORKBOOK.cover}
+        image="/og-workbook.jpg"
       />
 
       <section className="bg-cream px-6 pt-36 md:pt-44 pb-24 md:pb-32">
