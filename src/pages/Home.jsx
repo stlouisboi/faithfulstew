@@ -258,7 +258,7 @@ function FilmSection() {
 export default function Home() {
   return (
     <>
-      <Seo path="/" />
+      <Seo path="/" image="/og-home.jpg" />
       <Hero />
       <FilmSection />
       <Tension />
