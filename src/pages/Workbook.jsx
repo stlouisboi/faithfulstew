@@ -9,7 +9,7 @@ import { WORKBOOK, EASE } from '../lib/site'
 
 const VALUE_STACK = [
   { Icon: FileText, label: '30 chapter-aligned tools' },
-  { Icon: Printer, label: 'Printable workbook (PDF)' },
+  { Icon: Printer, label: 'Printable 8.5 x 11 workbook (PDF)' },
   { Icon: PenLine, label: 'Fillable version for founding readers' },
   { Icon: Gift, label: 'First Faithful Offer bonus' },
 ]
@@ -32,7 +32,7 @@ const OUTPUTS = [
 ]
 
 const RECEIVE = [
-  'The printable workbook (PDF)',
+  'The printable 8.5 x 11 workbook (PDF)',
   'The fillable version when it is released',
   'The First Faithful Offer bonus',
   'Early access before public launch',
@@ -58,7 +58,7 @@ export default function Workbook() {
             transition={{ duration: 0.8, ease: EASE }}
             className="lg:col-span-5 lg:sticky lg:top-32"
           >
-            <div className="relative aspect-[4/5] max-w-sm mx-auto overflow-hidden shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
+            <div className="relative aspect-[17/22] max-w-sm mx-auto overflow-hidden shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
               <img src={WORKBOOK.cover} alt={`${WORKBOOK.title} cover`} className="w-full h-full object-cover" />
             </div>
           </motion.div>
@@ -93,7 +93,7 @@ export default function Workbook() {
             </p>
 
             <p className="mt-6 text-sm tracking-wide text-ink font-medium">
-              {WORKBOOK.price} one-time <span className="text-ink-tertiary">&middot;</span> Printable PDF{' '}
+              {WORKBOOK.price} one-time <span className="text-ink-tertiary">&middot;</span> 8.5 x 11 printable PDF{' '}
               <span className="text-ink-tertiary">&middot;</span> Fillable version for founding readers
             </p>
 

@@ -72,8 +72,12 @@ export default function Book() {
             transition={{ duration: 0.8, ease: EASE }}
             className="lg:col-span-5"
           >
-            <div className="relative aspect-[2/3] max-w-sm mx-auto border border-border-dark shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)]">
-              <img src={BOOK.cover} alt={`${BOOK.title} book cover`} className="w-full h-full object-cover" />
+            <div className="relative max-w-xs mx-auto">
+              <img
+                src="/book-3d-cover.png"
+                alt={`${BOOK.title} paperback`}
+                className="w-full h-auto drop-shadow-[0_40px_60px_rgba(0,0,0,0.55)]"
+              />
             </div>
           </motion.div>
 
