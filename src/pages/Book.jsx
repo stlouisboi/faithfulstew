@@ -61,7 +61,7 @@ export default function Book() {
         title="The Book"
         path="/book"
         description={`${BOOK.title}: ${BOOK.subtitle}`}
-        image={BOOK.cover}
+        image="/og-book.jpg"
       />
 
       <section className="bg-navy text-cream px-6 pt-36 md:pt-44 pb-24 md:pb-32">
