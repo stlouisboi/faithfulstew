@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import Seo from '../components/Seo'
 import Hero from '../components/Hero'
 import Framework from '../components/Framework'
+import Endorsements from '../components/Endorsements'
 import { EASE, BOOK } from '../lib/site'
 
 function Tension() {
@@ -266,6 +267,7 @@ export default function Home() {
       <Framework />
       <BookTeaser />
       <AboutTeaser />
+      <Endorsements />
       <FinalCta />
     </>
   )
