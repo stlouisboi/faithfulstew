@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { STAGES } from '../data/decisionTest'
+import { track } from '../lib/analytics'
 
 // Reusable MailerLite capture form. Posts to the Vercel serverless function
 // /api/subscribe. Optionally carries a `resultTag` and a `presetStage`.
@@ -49,6 +50,7 @@ export default function EmailCapture({
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Something went wrong.')
       setStatus('ok')
+      track('Signup', { source, result: resultTag || 'none' })
       setMessage('Thank you. Please check your inbox to confirm and receive your guide.')
       onSuccess?.()
     } catch (err) {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
@@ -6,6 +6,7 @@ import Seo from '../components/Seo'
 import EmailCapture from '../components/EmailCapture'
 import { QUESTIONS, ASSESSMENT, RESULTS, CLOSING, computeResult } from '../data/decisionTest'
 import { EASE } from '../lib/site'
+import { track } from '../lib/analytics'
 
 export default function DecisionTest() {
   const [step, setStep] = useState(0)
@@ -22,6 +23,10 @@ export default function DecisionTest() {
   }, [answers, current])
 
   const result = useMemo(() => (phase === 'result' ? computeResult(answers) : null), [phase, answers])
+
+  useEffect(() => {
+    if (result) track('Assessment Completed', { result: result.key })
+  }, [result])
 
   function chooseSingle(value) {
     setAnswers((a) => ({ ...a, [current.id]: value }))
