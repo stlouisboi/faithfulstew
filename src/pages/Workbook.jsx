@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { Check, FileText, Printer, PenLine, Gift } from 'lucide-react'
 import Seo from '../components/Seo'
 import EmailCapture from '../components/EmailCapture'
+import StickyBuyBar from '../components/StickyBuyBar'
 import Faq from '../components/Faq'
 import { faqsByTag } from '../data/faq'
 import { WORKBOOK, EASE } from '../lib/site'
@@ -48,6 +49,14 @@ export default function Workbook() {
         path="/workbook"
         description={`${WORKBOOK.title}: the implementation companion to Kingdom Before Company. ${WORKBOOK.price}.`}
         image="/og-workbook.jpg"
+      />
+
+      <StickyBuyBar
+        title="The Faithful Steward Workbook"
+        price={`${WORKBOOK.price}`}
+        note="8.5 x 11 printable PDF"
+        ctaLabel="Reserve My Copy"
+        ctaHref="#founding"
       />
 
       <section className="bg-cream px-6 pt-36 md:pt-44 pb-24 md:pb-32">

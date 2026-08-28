@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { Check, ArrowRight } from 'lucide-react'
 import Seo from '../components/Seo'
 import Faq from '../components/Faq'
+import StickyBuyBar from '../components/StickyBuyBar'
 import { faqsByTag } from '../data/faq'
 import { BOOK, EASE } from '../lib/site'
 
@@ -62,6 +63,13 @@ export default function Book() {
         path="/book"
         description={`${BOOK.title}: ${BOOK.subtitle}`}
         image="/og-book.jpg"
+      />
+
+      <StickyBuyBar
+        title="Kingdom Before Company"
+        price="$18.99"
+        note="Paperback on Amazon"
+        comingSoon
       />
 
       <section className="bg-navy text-cream px-6 pt-36 md:pt-44 pb-24 md:pb-32">

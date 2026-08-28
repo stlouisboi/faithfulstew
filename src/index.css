@@ -28,6 +28,41 @@ h3.font-display {
   line-height: 1.2;
 }
 
+/* Premium press/lift feedback on filled CTA buttons and links */
+a[class*="bg-ink"],
+a[class*="bg-gold"],
+a[class*="bg-navy"],
+a[class*="bg-cream"],
+button[class*="bg-ink"],
+button[class*="bg-gold"],
+button[class*="bg-navy"],
+button[class*="bg-cream"] {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  will-change: transform;
+}
+a[class*="bg-ink"]:hover,
+a[class*="bg-gold"]:hover,
+a[class*="bg-navy"]:hover,
+a[class*="bg-cream"]:hover,
+button[class*="bg-ink"]:hover,
+button[class*="bg-gold"]:hover,
+button[class*="bg-navy"]:hover,
+button[class*="bg-cream"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.45);
+}
+a[class*="bg-ink"]:active,
+a[class*="bg-gold"]:active,
+a[class*="bg-navy"]:active,
+a[class*="bg-cream"]:active,
+button[class*="bg-ink"]:active,
+button[class*="bg-gold"]:active,
+button[class*="bg-navy"]:active,
+button[class*="bg-cream"]:active {
+  transform: translateY(0) scale(0.98);
+}
+
 /* Slightly heavier secondary/body copy for more presence */
 p,
 li {

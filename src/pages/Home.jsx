@@ -144,6 +144,7 @@ function AboutTeaser() {
               <img
                 src="/vince-lawrence.png"
                 alt="Vince Lawrence"
+                loading="lazy"
                 className="w-full h-auto object-cover grayscale contrast-[1.05] transition-[filter] duration-700 group-hover:grayscale-0"
               />
               <span
