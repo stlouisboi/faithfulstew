@@ -21,7 +21,7 @@ export default function About() {
             className="lg:col-span-5 lg:sticky lg:top-32"
           >
             <div className="relative bg-cream-dark border border-border-light overflow-hidden">
-              <img src="/vince-lawrence.png" alt="Vince Lawrence" className="w-full h-auto object-cover" />
+              <img src="/vince-lawrence.webp" alt="Vince Lawrence" loading="lazy" className="w-full h-auto object-cover" />
             </div>
             <div className="mt-6 flex items-center gap-4">
               <span className="w-12 h-px bg-gold" />

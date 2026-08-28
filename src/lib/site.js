@@ -28,7 +28,7 @@ export const WORKBOOK = {
   title: 'The Faithful Steward Workbook',
   subtitle: 'Thirty chapter-aligned tools for faithful business stewardship',
   price: '$27',
-  cover: '/workbook-cover.png',
+  cover: '/workbook-cover.webp',
   // Set VITE_STRIPE_PAYMENT_LINK in your Vercel env to enable checkout.
   paymentLink: import.meta.env.VITE_STRIPE_PAYMENT_LINK || '',
 }

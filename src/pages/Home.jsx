@@ -143,7 +143,7 @@ function AboutTeaser() {
             {/* duotone portrait */}
             <div className="relative overflow-hidden bg-navy border border-navy">
               <img
-                src="/vince-lawrence.png"
+                src="/vince-lawrence.webp"
                 alt="Vince Lawrence"
                 loading="lazy"
                 className="w-full h-auto object-cover grayscale contrast-[1.05] transition-[filter] duration-700 group-hover:grayscale-0"

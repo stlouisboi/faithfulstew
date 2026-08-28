@@ -82,7 +82,7 @@ export default function Book() {
           >
             <div className="relative max-w-xs mx-auto">
               <img
-                src="/book-3d-cover.png"
+                src="/book-3d-cover.webp"
                 alt={`${BOOK.title} paperback`}
                 className="w-full h-auto drop-shadow-[0_40px_60px_rgba(0,0,0,0.55)]"
               />
