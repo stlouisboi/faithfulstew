@@ -11,3 +11,6 @@ credentials.json
 *.pem
 *.key
 .credentials
+
+# Emergent preview launcher (do not deploy)
+/frontend/
