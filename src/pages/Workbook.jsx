@@ -67,8 +67,12 @@ export default function Workbook() {
             transition={{ duration: 0.8, ease: EASE }}
             className="lg:col-span-5 lg:sticky lg:top-32"
           >
-            <div className="relative aspect-[17/22] max-w-sm mx-auto overflow-hidden shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)]">
-              <img src={WORKBOOK.cover} alt={`${WORKBOOK.title} cover`} className="w-full h-full object-cover" />
+            <div className="relative max-w-sm mx-auto">
+              <img
+                src="/workbook-3d-cover.webp"
+                alt={`${WORKBOOK.title} cover`}
+                className="w-full h-auto drop-shadow-[0_40px_60px_rgba(0,0,0,0.35)]"
+              />
             </div>
           </motion.div>
 
