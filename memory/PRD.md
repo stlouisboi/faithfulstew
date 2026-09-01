@@ -68,3 +68,9 @@ own GitHub → Vercel. Serverless functions (`/api/*`) run only on Vercel, not i
 - Workbook repositioned as implementation companion ("book teaches and starts... workbook finishes and operationalizes"); added "What you will create" section with 12 named tangible outputs; removed "82-page" claim; retained later-stage tools.
 - Site-wide removal of ALL em/en dashes (unicode, &mdash;/&ndash; entities, \u2014 escapes) across copy, metadata, SEO, and even code comments. Verified zero remaining.
 - Verified by testing agent iteration_4: 100% frontend pass (all 4 result paths incl. override, multi-select exclusivity, no dashes, workbook outputs, zero console errors on 11 routes).
+
+## Update (2026-06 fork) — New workbook cover ("WORKBOOK / A Companion to Kingdom Before Company")
+- User uploaded a new Option A flat cover (large cream "WORKBOOK" + gold "A COMPANION TO KINGDOM BEFORE COMPANY"). Title change from prior "Kingdom Before Company / The Workbook".
+- Generated a photorealistic 3D standing-book render from it, cut to transparent PNG with rembg (no AI text redraw). Saved public/workbook-3d-cover.png + .webp (~52KB). Workbook page hero (Workbook.jsx) uses it; site.js WORKBOOK.cover pointed at /workbook-3d-cover.webp.
+- Regenerated OG cards with PIL (real composited text, navy #1B222C bg, gold #D4AF37, Playfair+Inter): public/og-workbook.jpg (new 3D cover + "The Workbook" + "$29.99 · Companion to Kingdom Before Company") and public/og-home.jpg (paperback front + new workbook behind + "Put the Kingdom Before the Company").
+- OG rebuild script kept at memory/build_og.py. vite build passes; verified workbook page render via screenshot.
