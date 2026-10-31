@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEMS Workbench Requirements Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout idea: a working spec sheet. Summary strip first, then tabbed matrix / flows / roadmap. Dark green, white, light gray. */
+:root{
+ --green:#14532d; --green2:#1f6b3d; --wash:#e6f0ea; --paper:#ffffff; --bg:#f3f4f6; --ink:#1f2937; --mute:#5b6472; --line:#d1d5db;
+ --ok:#166534; --okbg:#dcfce7; --part:#92400e; --partbg:#fef3c7; --gap:#991b1b; --gapbg:#fee2e2;
+ --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+ color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--sans)}
+h1,h2,h3{text-wrap:balance;line-height:1.2;margin:0}
+a{color:var(--green)}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px 48px}
+header{background:var(--green);color:#fff;padding:22px 0 0}
+header .wrap{padding-bottom:0}
+.proto{background:#fff7ed;border-bottom:2px solid #b45309;color:#7c2d12;font-size:14px;font-weight:600;text-align:center;padding:6px 16px}
+h1{font-size:26px;font-weight:600}
+.lede{margin:6px 0 16px;max-width:70ch;color:#d7e8dd}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{background:transparent;border:0;color:#d7e8dd;padding:10px 16px;font-weight:500;cursor:pointer;border-radius:8px 8px 0 0}
+.tabs button[aria-selected=true]{background:var(--bg);color:var(--green)}
+main{padding-top:20px}
+.sumrow{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:18px}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px;border-left-width:6px}
+.tile b{display:block;font-size:28px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile span{font-size:13px;color:var(--mute)}
+.tile.b{border-left-color:var(--ok)}.tile.p{border-left-color:#d97706}.tile.g{border-left-color:#dc2626}.tile.t{border-left-color:var(--green)}
+.note{background:var(--wash);border-left:4px solid var(--green);padding:10px 14px;border-radius:0 8px 8px 0;margin:0 0 18px;max-width:90ch;font-size:15px}
+.mods{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin-bottom:18px}
+.mod{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;text-align:left;cursor:pointer}
+.mod[aria-pressed=true]{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+.mod .nm{font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.mod .nm small{font-family:var(--mono);font-weight:400;color:var(--mute)}
+.stack{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:8px;background:var(--line)}
+.stack i{display:block}
+.stack .b{background:#16a34a}.stack .p{background:#f59e0b}.stack .g{background:#dc2626}
+.cnt{font-size:12px;color:var(--mute);margin-top:4px;font-variant-numeric:tabular-nums}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:12px}
+.bar label{display:flex;flex-direction:column;font-size:12px;color:var(--mute);gap:2px}
+.bar input,.bar select{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);min-width:200px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:16px;padding:5px 12px;cursor:pointer;font-size:14px}
+.chip[aria-pressed=true]{background:var(--green);color:#fff;border-color:var(--green)}
+.btn{background:var(--green);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+.btn.alt{background:var(--paper);color:var(--green);border:1px solid var(--green)}
+.tablewrap{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{background:var(--wash);color:var(--green);text-align:left;padding:8px 10px;white-space:nowrap;position:sticky;top:0}
+td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:top}
+tr.row{cursor:pointer}
+tr.row:hover td{background:#f8faf9}
+tr.row.hl td{background:#fffbeb}
+tr.det td{background:#f8faf9;font-size:14px;color:var(--ink)}
+.id{font-family:var(--mono);font-size:13px;white-space:nowrap}
+.pill{display:inline-flex;gap:6px;align-items:center;border-radius:12px;padding:2px 10px;font-size:13px;font-weight:600;white-space:nowrap}
+.pill.b{background:var(--okbg);color:var(--ok)}.pill.p{background:var(--partbg);color:var(--part)}.pill.g{background:var(--gapbg);color:var(--gap)}
+.mut{color:var(--mute)}
+h2{font-size:20px;color:var(--green);margin:6px 0 4px}
+h3{font-size:16px;color:var(--green);margin:18px 0 6px}
+.sub{color:var(--mute);margin:0 0 14px;max-width:75ch}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:10px 0 14px}
+.step{background:var(--paper);border:2px solid var(--line);border-radius:8px;padding:10px 12px;min-width:150px;flex:1 1 150px;max-width:220px;text-align:left;cursor:pointer;position:relative}
+.step[aria-pressed=true]{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.step b{display:block;margin:2px 0 6px}
+.step.b{border-top:6px solid #16a34a}.step.p{border-top:6px solid #f59e0b}.step.g{border-top:6px dashed #dc2626}
+.step.future{border-style:dashed}
+.arrow{align-self:center;color:var(--green);font-size:20px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;max-width:90ch}
+.panel ul{margin:6px 0 0;padding-left:20px}
+.reqchip{font-family:var(--mono);font-size:12px;background:var(--wash);border:1px solid #b9d3c3;color:var(--green);border-radius:4px;padding:1px 6px;cursor:pointer;margin-right:4px;display:inline-block}
+.gate{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));max-width:900px}
+.gate .panel{max-width:none}
+.gate li{margin:3px 0}
+.phases{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
+.phase{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px;border-top:6px solid var(--green)}
+.phase.later{border-top-color:#9ca3af}
+.phase h3{margin-top:0}
+.phase .when{font-size:13px;color:var(--mute);margin-bottom:8px}
+.phase ul{padding-left:0;list-style:none;margin:0;display:grid;gap:10px}
+.phase li{font-size:14.5px}
+.phase li .sw{display:block;margin-top:3px}
+.new{font-size:11px;font-weight:600;background:#e0e7ff;color:#3730a3;border-radius:8px;padding:1px 7px;margin-left:4px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin:0 0 12px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.mod,.step,.chip{transition:box-shadow .15s,border-color .15s}}
+@media (max-width:560px){h1{font-size:22px}.arrow{display:none}.step{max-width:none}}
+</style>
+</head>
+<body>
+<div class="proto">Prototype. Not approved for operational VA records. Fictional sample data only.</div>
+<header>
+ <div class="wrap">
+  <h1>GEMS Workbench: requirements and features matrix</h1>
+  <p class="lede">What the first build covers, how work moves through it, and what is still missing. Checked against the original request and the code in the <code>gems-herc-workbench</code> repo on 2026-10-31.</p>
+  <div class="tabs" role="tablist">
+   <button role="tab" id="tab-matrix" aria-selected="true" data-tab="matrix">Matrix</button>
+   <button role="tab" id="tab-flows" aria-selected="false" data-tab="flows">User flows</button>
+   <button role="tab" id="tab-roadmap" aria-selected="false" data-tab="roadmap">Roadmap and gaps</button>
+  </div>
+ </div>
+</header>
+<div class="wrap"><main>
+
+<section id="p-matrix" role="tabpanel" aria-labelledby="tab-matrix">
+ <div class="sumrow" id="sum"></div>
+ <p class="note">These are counts of requirements, not a readiness score. "Built" means the feature works in the prototype with sample data. It does not mean the app is approved, tested by users, or safe for real VA records.</p>
+ <div class="mods" id="mods"></div>
+ <div class="bar">
+  <label for="q">Search<input id="q" type="search" placeholder="Words, or an ID like CA-3"></label>
+  <label>Status<span class="chips" id="stchips"></span></label>
+  <button class="btn alt" id="clear">Clear filters</button>
+  <button class="btn" id="copycsv">Copy matrix as CSV</button>
+ </div>
+ <p class="mut" id="count" aria-live="polite"></p>
+ <div class="tablewrap"><table>
+  <thead><tr><th>ID</th><th>Module</th><th>Requirement</th><th>Status</th></tr></thead>
+  <tbody id="rows"></tbody>
+ </table></div>
+ <p class="mut" style="font-size:13px">Click a row to see how it works today and what is missing.</p>
+</section>
+
+<section id="p-flows" role="tabpanel" aria-labelledby="tab-flows" hidden>
+ <h2>User flows</h2>
+ <p class="sub">Click a step to see what the app does there and which requirements it relies on. A dashed top edge means the step is not built.</p>
+ <div class="legend"><span class="pill b">● Built</span><span class="pill p">◐ Partly built</span><span class="pill g">○ Not built</span></div>
+ <h3>1. Core flow, from daily checklist to weekly report</h3>
+ <div class="flow" id="flowA"></div>
+ <div class="panel" id="detA"></div>
+ <h3>2. Waste document review: three separate steps</h3>
+ <div class="flow" id="flowB"></div>
+ <div class="panel" id="detB"></div>
+ <h3>3. What the app checks before anything closes</h3>
+ <div class="gate">
+  <div class="panel"><b>Corrective action → "Verified closed"</b>
+   <ul><li>Evidence entered? If not, blocked.</li><li>Verifier name entered? If not, blocked.</li><li>Verification date entered? If not, blocked.</li><li>All three present: the action can close.</li><li>Due date changed on an existing action? A reason is required, and the original date is kept.</li></ul>
+   <p class="mut" style="font-size:13px;margin:8px 0 0">Gap: the app does not check that the verifier is someone other than the person who entered the record.</p></div>
+  <div class="panel"><b>Finding → "Verified closed"</b>
+   <ul><li>At least one corrective action exists.</li><li>Every action is "Verified closed".</li><li>Final verifier, date, and evidence are all entered.</li><li>Add a new action later and the finding reopens by itself.</li></ul></div>
+ </div>
+ <h3>4. Future flow: POC, reviewer, and management</h3>
+ <div class="flow" id="flowC"></div>
+ <div class="panel" id="detC"></div>
+</section>
+
+<section id="p-roadmap" role="tabpanel" aria-labelledby="tab-roadmap" hidden>
+ <h2>Roadmap and gaps</h2>
+ <p class="sub">Phases are in the order the dependencies suggest. They are not dated. Phase 1 needs no approvals. Phases 2 to 4 need the platform, access, storage, and retention decisions the original request says must be approved locally.</p>
+ <div class="phases" id="phases"></div>
+ <h3>Every open requirement, grouped by what blocks it</h3>
+ <div class="tablewrap"><table><thead><tr><th>ID</th><th>Gap</th><th>Status</th><th>Phase</th></tr></thead><tbody id="gaprows"></tbody></table></div>
+</section>
+
+</main></div>
+
+<script>
+"use strict";
+/* status: b = built, p = partly built, g = not built. */
+const MODS=[
+ ['MD','My Day'],['PS','Program Setup'],['AF','Assessments and Findings'],['CA','Corrective Actions'],['WD','Waste Document Reviews'],['TR','Training'],['RP','Reports'],['SH','Shared features'],['US','Users and roles'],['PB','Prototype boundaries']
+];
+const R=[
+['MD-1','Daily checklist with checkboxes','b','Tasks have checkboxes. One button adds four standard daily items without duplicates.'],
+['MD-2','Top three priorities','b','Star up to three open tasks. A fourth is refused with a message.'],
+['MD-3','Tasks due today and overdue','b','Separate Overdue, Due today, Planned, and Coming up lists. Overdue shows days late.'],
+['MD-4','Daily notes: checked, found, next','b','Three boxes per day, saved when you leave the box. Friday log reads them.'],
+['MD-5','Carry unfinished tasks forward, keep original due date','b','Moves the planned date to today. Due date stays. Each move is written to change history.'],
+['PS-1','Checklist to locate procedures, permits, assessments, waste records, training records, open actions','b','Eight starter items, including "which name and guidebook does our site use". Add more as needed.'],
+['PS-2','POC directory by service and program','b','Name, service, program, work contact. Edit and filter.'],
+['PS-3','Label info: confirmed, needs local verification, documentation missing','b','Used on setup items and POCs. Items marked "documentation missing" appear in the gaps report.'],
+['AF-1','Assessment fields: program, location, date, requirement reference, observed condition, result, evidence','b','All fields present. Accountable POC is separate from the person entering.'],
+['AF-2','Four results: meets, finding, unable to verify, not applicable','b','Dropdown with those four values.'],
+['AF-3','"Not applicable" needs an explanation','b','Also required for "Unable to verify". The form blocks saving without it.'],
+['AF-4','Evidence links and attachments on assessments','p','Links and notes work. Attaching a file saves only the file name. The file itself is not stored.'],
+['AF-5','One finding can have several corrective actions','b','Create a finding from an assessment, then add any number of actions. Finding shows "2 of 3 closed".'],
+['CA-1','Action fields: finding, action, POC, priority, original due, current due, next step, status','b','All present.'],
+['CA-2','Five statuses: open, in progress, awaiting evidence, ready for verification, verified closed','b','Dropdown with those five values.'],
+['CA-3','Closing requires evidence, verifier name, verification date','b','The form lists exactly what is missing.'],
+['CA-4','Finding stays open until all actions and final verification are complete','b','Status is worked out from its actions. Adding an action reopens a closed finding.'],
+['CA-5','Record reasons for deadline changes','b','Reason is required when editing an existing action or task. Original due date is kept. Reasons show in change history.'],
+['CA-6','Verifier is a different person from the one who entered it','g','Verifier is free text. The app does not compare it to the person entering. Needs real user accounts first.'],
+['CA-7','Designated reviewer approves closure','g','No reviewer role. Today anyone using the app can type a verifier name.'],
+['WD-1','Four waste streams kept separate','b','Hazardous, pharmaceutical, biological / regulated medical, asbestos each have their own table.'],
+['WD-2','Track shipment date, document type and number, vendor, quantity and unit, receipt, review status, discrepancies, follow-up','b','All fields present.'],
+['WD-3','Shipment completed, document received, review completed stay separate','b','Three independent fields. A review cannot be marked complete if no document was received.'],
+['WD-4','Do not assume one manifest or deadline for every stream','p','Document type is free text and the due date is optional. Each stream shows a "confirm locally" note. No per-stream rules can be set up yet.'],
+['WD-5','Flag waste-document exceptions','b','Flags: shipped with no document, past an optional due date, received but not reviewed, open discrepancy, discrepancy with no follow-up. These five rules are the prototype\'s own, not regulatory.'],
+['WD-6','Settings for which document and deadline each stream uses','g','Needs local procedures first. Then a settings page per stream.'],
+['TR-1','Training fields: topic, audience, POC, version, assigned, due, completed, evidence, refresher','b','All fields present.'],
+['TR-2','Separate overdue from missing completion proof','b','"Overdue" means not completed and past due. "Completed – proof missing" means a completion date with no evidence.'],
+['TR-3','Reference the official training system','p','A free-text field. No link, import, or sync.'],
+['TR-4','Refresher tracking','b','Shows "Refresher due" when the refresher date has passed.'],
+['RP-1','Monday planning brief','b','Open tasks, open actions, waste exceptions, training problems up to the end date.'],
+['RP-2','Friday accomplishments log','b','Tasks done, assessments, findings, actions verified closed, waste reviews, training completed, and daily notes inside the range.'],
+['RP-3','Open and overdue corrective actions','b','Days late counted to the end of the date range. Shows how many times the due date moved.'],
+['RP-4','Missing evidence and waste-document exceptions','b','Assessments and actions without evidence, training without proof, waste exceptions, setup items with missing documentation.'],
+['RP-5','Training status','b','All training records with derived status.'],
+['RP-6','Management-review summary with decisions and resources needed','b','Counts with record IDs, plus two text boxes for decisions and resources. No score.'],
+['RP-7','Every report shows date range, scope, and supporting record IDs','p','Shown on all six. Reports about open items list everything open as of the end date instead of filtering by the range. Scope filters by program only.'],
+['RP-8','Print / PDF','p','Works in a downloaded copy of the app. Blocked inside the claude.ai viewer.'],
+['RP-9','CSV export','b','Downloads in a normal browser. In the viewer it shows the text to copy.'],
+['SH-1','Unique IDs and created / updated timestamps','b','IDs like CA-001. Every record has created, updated, and entered-by.'],
+['SH-2','Search and filters by program, location, owner, status, due date','p','All five exist on most lists. POC and finding lists lack some. Filters reset when the page reloads.'],
+['SH-3','Evidence links and attachments on any record','p','Same limit as AF-4: file names only.'],
+['SH-4','Change history for ownership, deadlines, status','p','Logged for owner, due date, status, and a few key fields. Other edits are not logged. History sits in the browser and can be edited, so it is not an audit-grade record.'],
+['SH-5','Person entering is separate from the accountable POC','b','Entered-by is set automatically. Accountable POC is a separate field.'],
+['SH-6','Missing information is never treated as compliance','b','Empty reports say "that does not prove nothing is wrong". Setup labels and gap reports show what is unconfirmed.'],
+['SH-7','No overall compliance score','b','Only counts of entered records.'],
+['SH-8','Plain language at about a fifth-grade level','p','Written in plain words. Reading level was not measured, and some terms (corrective action, manifest) stay.'],
+['SH-9','Works on a computer or an iPad','p','Responsive layout. Not yet tried on an iPad.'],
+['SH-10','Dark green, white, light gray; no VA seal; no implied approval','b','Footer and banner say it is independent and not VA-approved.'],
+['US-1','One user entering everything','b','A single sample user.'],
+['US-2','POCs update only assigned records and submit evidence','g','No accounts or permissions.'],
+['US-3','Designated reviewer role','g','Same gap as CA-7.'],
+['US-4','Management gets read-only reports','g','Reports can be printed or copied, but there is no read-only login.'],
+['US-5','Sign-in','g','None. Anyone with the file can edit.'],
+['US-6','Shared storage','g','Data lives in one browser on one device. Two devices have two separate copies, and clearing the browser deletes it.'],
+['PB-1','Show "Prototype. Not approved for operational VA records."','b','Banner on every screen and report.'],
+['PB-2','Fictional sample data only','b','Names, vendors, and numbers are made up. A reset button restores them.'],
+['PB-3','Do not collect patient or sensitive information','p','Warnings in the banner and evidence fields. The app does not detect or block sensitive text.'],
+['PB-4','Local approval of platform, access, storage, retention, workflows','g','Not a software task. Required before any operational use.']
+];
+/* Extra gaps the original request did not list but the prototype needs. */
+const X=[
+['X-1','Backup and restore (JSON) so one browser failure does not lose everything','g','1'],
+['X-2','Delete or archive a record','g','1'],
+['X-3','Edit dropdown lists (programs, locations) without changing code','g','1'],
+['X-4','Recurring tasks beyond the four standard daily items','g','1'],
+['X-5','Reminders and notifications for due items','g','3'],
+['X-6','Automated tests','g','1'],
+['X-7','Accessibility check with a screen reader and keyboard only','g','4']
+];
+const PH={
+ 'MD-1':'1','MD-2':'1',
+ 'AF-4':'2','SH-3':'2','WD-4':'1','WD-6':'1','TR-3':'3','RP-7':'1','RP-8':'1','SH-2':'1','SH-4':'2','SH-8':'1','SH-9':'1',
+ 'CA-6':'3','CA-7':'3','US-2':'3','US-3':'3','US-4':'3','US-5':'2','US-6':'2','PB-3':'1','PB-4':'4'
+};
+const PHASES=[
+ {n:'1',t:'Harden the single-user prototype',w:'No approvals needed. Still one user, one browser.',items:[
+  ['X-1','Backup and restore'],['X-2','Delete or archive records'],['X-3','Editable dropdown lists'],['X-4','Recurring tasks'],
+  ['WD-4','Per-stream waste settings (document type, deadline) once local rules are known','WD-6'],['RP-7','Make date range and scope apply the same way in every report'],
+  ['SH-2','Complete filters and remember them'],['PB-3','Warn when text looks like a name, SSN, or MRN'],['SH-8','Measure reading level and simplify'],['SH-9','Test on an iPad'],['RP-8','Print layout check in a normal browser'],['X-6','Automated tests for the closing rules']]},
+ {n:'2',t:'Shared storage and sign-in',w:'Needs a platform decision.',items:[
+  ['US-6','Shared database'],['US-5','Sign-in'],['AF-4','Real file storage for evidence','SH-3'],['SH-4','Tamper-evident change log covering every field']]},
+ {n:'3',t:'Roles',w:'Needs phase 2.',items:[
+  ['US-2','POC view: assigned records only, submit evidence'],['CA-7','Reviewer approves closure','US-3'],['CA-6','Block a verifier who entered the record'],['US-4','Management read-only reports'],['X-5','Reminders and notifications'],['TR-3','Link to the official training system']]},
+ {n:'4',t:'Operational readiness',w:'Needs local approval. Not a coding phase.',items:[
+  ['PB-4','Local approval of platform, access, storage, retention, workflows'],['X-7','Accessibility testing'],['PB-4','Security review and pilot with one program']]}
+];
+const NOTE={g:'Not built',p:'Partly built',b:'Built'};
+const SYM={g:'○',p:'◐',b:'●'};
+const pill=s=>`<span class="pill ${s}">${SYM[s]} ${NOTE[s]}</span>`;
+const $=s=>document.querySelector(s);
+const modName=id=>(MODS.find(m=>m[0]===id.split('-')[0])||[0,''])[1];
+const byId=Object.fromEntries(R.map(r=>[r[0],r]));
+let F={mod:'',st:'',q:'',hl:''};
+
+/* ---------- summary ---------- */
+function summary(){
+ const c={b:0,p:0,g:0};R.forEach(r=>c[r[2]]++);
+ $('#sum').innerHTML=`<div class="tile t"><b>${R.length}</b><span>requirements tracked</span></div><div class="tile b"><b>${c.b}</b><span>built</span></div><div class="tile p"><b>${c.p}</b><span>partly built</span></div><div class="tile g"><b>${c.g}</b><span>not built</span></div>`;
+ $('#mods').innerHTML=MODS.map(([k,n])=>{
+  const rs=R.filter(r=>r[0].startsWith(k+'-'));const t=rs.length;const cc={b:0,p:0,g:0};rs.forEach(r=>cc[r[2]]++);
+  return `<button class="mod" data-mod="${k}" aria-pressed="${F.mod===k}"><div class="nm">${n}<small>${k}</small></div><div class="stack" role="img" aria-label="${cc.b} built, ${cc.p} partly built, ${cc.g} not built">${['b','p','g'].map(s=>cc[s]?`<i class="${s}" style="width:${cc[s]/t*100}%"></i>`:'').join('')}</div><div class="cnt">${cc.b} built · ${cc.p} partly · ${cc.g} not built</div></button>`}).join('');
+ $('#stchips').innerHTML=['b','p','g'].map(s=>`<button class="chip" data-st="${s}" aria-pressed="${F.st===s}">${NOTE[s]}</button>`).join('');
+}
+function matrix(){
+ const q=F.q.toLowerCase();
+ const rs=R.filter(r=>(!F.mod||r[0].startsWith(F.mod+'-'))&&(!F.st||r[2]===F.st)&&(!q||(r[0]+' '+r[1]+' '+r[3]+' '+modName(r[0])).toLowerCase().includes(q)));
+ $('#count').textContent=rs.length+' of '+R.length+' requirements shown';
+ $('#rows').innerHTML=rs.map(r=>`<tr class="row ${F.hl===r[0]?'hl':''}" data-id="${r[0]}" tabindex="0" aria-expanded="false"><td class="id">${r[0]}</td><td>${modName(r[0])}</td><td>${r[1]}</td><td>${pill(r[2])}</td></tr><tr class="det" hidden data-for="${r[0]}"><td></td><td colspan="3"><b>Today:</b> ${r[3]}${PH[r[0]]?` <span class="mut">Roadmap: phase ${PH[r[0]]}.</span>`:''}</td></tr>`).join('')||'<tr><td colspan="4" class="mut">No requirements match. Clear a filter.</td></tr>';
+}
+function toggleRow(tr){
+ const d=document.querySelector(`tr.det[data-for="${tr.dataset.id}"]`);d.hidden=!d.hidden;tr.setAttribute('aria-expanded',String(!d.hidden));
+}
+/* ---------- flows ---------- */
+function worst(ids){const s=ids.map(i=>byId[i]?byId[i][2]:'b');return s.includes('g')?'g':s.includes('p')?'p':'b'}
+const reqChips=ids=>ids.map(i=>`<span class="reqchip" data-goto="${i}" tabindex="0" role="link" title="${byId[i]?byId[i][1]:''}">${i}</span>`).join('');
+const FLOWS={
+ A:[
+  ['My Day','Start with the checklist, top three, and overdue list. Write what you checked and found.',['MD-1','MD-2','MD-3','MD-4','MD-5'],'Output: a list of what to check today.'],
+  ['Assessment','Log program, location, date, requirement reference, what you saw, and a result. Add evidence.',['AF-1','AF-2','AF-3','AF-4'],'Rule: "Not applicable" and "Unable to verify" need an explanation.'],
+  ['Finding','From an assessment with the result "Finding", create a finding with a short title.',['AF-5'],'One finding can carry several actions.'],
+  ['Assigned action','Add one action per fix. Pick the responsible POC, priority, due date, next step.',['CA-1','CA-2','CA-5','SH-5'],'Rule: changing a due date needs a reason. Original date is kept.'],
+  ['Evidence','Attach links or notes that show the work was done.',['AF-4','SH-3'],'Gap: files are not stored, only their names.'],
+  ['Verification','Set the action to "Verified closed" with evidence, verifier name, and date.',['CA-3','CA-6','CA-7'],'Gaps: no check that the verifier is a different person, and no reviewer role.'],
+  ['Final verification','When every action is closed, record final verifier, date, and evidence. The finding closes.',['CA-4'],'Add a new action later and the finding reopens.'],
+  ['Weekly report','Run the Monday brief or the Friday log. Print, or copy the CSV.',['RP-1','RP-2','RP-3','RP-4','RP-7','RP-8','RP-9','SH-6','SH-7'],'Every report lists its date range, scope, and record IDs.']
+ ],
+ B:[
+  ['Shipment completed','Record the date and whether the shipment is done. Stream-specific.',['WD-1','WD-2'],'A shipment being done says nothing about its paperwork.'],
+  ['Document received','Record the document type, number, and date received. Leave blank if not received.',['WD-3','WD-4'],'Flag: shipped but no document received.'],
+  ['Review completed','Mark the review done after you check the document against the shipment.',['WD-3','WD-5'],'Rule: a review cannot be complete without a received document. Flag: open discrepancy or no follow-up.']
+ ],
+ C:[
+  ['POC submits evidence','A POC signs in, sees only assigned actions, and attaches evidence.',['US-2','US-5','AF-4'],'Not built. Needs sign-in and file storage.'],
+  ['Reviewer approves','A designated reviewer, not the person who entered the record, approves closure.',['CA-6','CA-7','US-3'],'Not built.'],
+  ['Management reads','Management opens read-only reports. No edit access.',['US-4','RP-6'],'Reports exist. The read-only login does not.']
+ ]
+};
+function flows(){
+ for(const k of ['A','B','C']){
+  const steps=FLOWS[k];
+  $('#flow'+k).innerHTML=steps.map((s,i)=>{const w=k==='C'?'g':worst(s[2]);return (i?'<span class="arrow" aria-hidden="true">→</span>':'')+`<button class="step ${w} ${k==='C'?'future':''}" data-flow="${k}" data-i="${i}" aria-pressed="${i===0}"><span class="n">Step ${i+1}</span><b>${s[0]}</b>${pill(w)}</button>`}).join('');
+  showStep(k,0);
+ }
+}
+function showStep(k,i){
+ const s=FLOWS[k][i];
+ $('#det'+k).innerHTML=`<b>${s[0]}</b><p style="margin:4px 0 8px">${s[1]}</p><div>${reqChips(s[2])}</div><p class="mut" style="margin:8px 0 0;font-size:14px">${s[3]}</p>`;
+ document.querySelectorAll(`#flow${k} .step`).forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.i===i)));
+}
+/* ---------- roadmap ---------- */
+function roadmap(){
+ $('#phases').innerHTML=PHASES.map(p=>`<div class="phase ${p.n==='1'?'':'later'}"><h3>Phase ${p.n}: ${p.t}</h3><div class="when">${p.w}</div><ul>${p.items.map(it=>{const id=it[0];const extra=it[2];const isX=id.startsWith('X-');const xr=isX?X.find(x=>x[0]===id):null;return `<li>${it[1]}${isX?'<span class="new">new</span>':''}<span class="sw">${isX?`<span class="id">${id}</span>`:reqChips([id].concat(extra?[extra]:[]))}</span></li>`}).join('')}</ul></div>`).join('');
+ const open=R.filter(r=>r[2]!=='b').map(r=>[r[0],r[1]+' — '+r[3],r[2],PH[r[0]]||'']).concat(X.map(x=>[x[0],x[1],x[2],x[3]]));
+ const ord={g:0,p:1};open.sort((a,b)=>(a[3]||'9').localeCompare(b[3]||'9')||ord[a[2]]-ord[b[2]]||a[0].localeCompare(b[0]));
+ $('#gaprows').innerHTML=open.map(o=>`<tr><td class="id">${o[0]}</td><td>${o[1]}</td><td>${pill(o[2])}</td><td>${o[3]?'Phase '+o[3]:'<span class="mut">unassigned</span>'}</td></tr>`).join('');
+}
+/* ---------- events ---------- */
+function setTab(t){
+ for(const k of ['matrix','flows','roadmap']){$('#p-'+k).hidden=k!==t;$('#tab-'+k).setAttribute('aria-selected',String(k===t))}
+ if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);
+}
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-tab],[data-mod],[data-st],[data-id],[data-flow],[data-goto],#clear,#copycsv');if(!t)return;
+ if(t.dataset.tab)setTab(t.dataset.tab);
+ else if(t.dataset.mod){F.mod=F.mod===t.dataset.mod?'':t.dataset.mod;summary();matrix()}
+ else if(t.dataset.st){F.st=F.st===t.dataset.st?'':t.dataset.st;summary();matrix()}
+ else if(t.dataset.flow)showStep(t.dataset.flow,+t.dataset.i);
+ else if(t.dataset.goto){F={mod:'',st:'',q:t.dataset.goto,hl:t.dataset.goto};$('#q').value=t.dataset.goto;setTab('matrix');summary();matrix();const tr=document.querySelector(`tr.row[data-id="${t.dataset.goto}"]`);if(tr){toggleRow(tr);tr.scrollIntoView({block:'center'})}}
+ else if(t.dataset.id)toggleRow(t);
+ else if(t.id==='clear'){F={mod:'',st:'',q:'',hl:''};$('#q').value='';summary();matrix()}
+ else if(t.id==='copycsv'){
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv=['ID,Module,Requirement,Status,Today'].concat(R.map(r=>[r[0],modName(r[0]),r[1],NOTE[r[2]],r[3]].map(q).join(','))).join('\n');
+  const done=ok=>{t.textContent=ok?'Copied':'Copy blocked in this viewer';setTimeout(()=>t.textContent='Copy matrix as CSV',2500)};
+  try{navigator.clipboard.writeText(csv).then(()=>done(true),()=>done(false))}catch(err){done(false)}
+ }
+});
+document.addEventListener('keydown',e=>{
+ if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr.row,.reqchip')){e.preventDefault();e.target.click()}
+});
+$('#q').addEventListener('input',e=>{F.q=e.target.value;F.hl='';matrix()});
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(['matrix','flows','roadmap'].includes(h))setTab(h)});
+summary();matrix();flows();roadmap();
+{const h=location.hash.slice(1);if(['matrix','flows','roadmap'].includes(h))setTab(h)}
+</script>
+</body>
+</html>
