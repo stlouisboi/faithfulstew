@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEMS Workbench (Prototype)</title>
+<style>
+:root{--g:#14532d;--g2:#1f6b3d;--gl:#e6f0ea;--gray:#f3f4f6;--line:#d1d5db;--tx:#1f2937;--mut:#6b7280;--red:#b42318;--amb:#b45309}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--tx);background:var(--gray)}
+#banner{background:#fff7ed;border-bottom:2px solid var(--amb);color:#7c2d12;padding:6px 12px;text-align:center;font-size:14px;font-weight:600}
+#app{display:flex;min-height:calc(100vh - 34px)}
+nav{width:210px;background:var(--g);color:#fff;padding:14px 8px;flex-shrink:0}
+nav h1{font-size:18px;margin:0 8px 2px}
+nav small{display:block;margin:0 8px 14px;opacity:.8}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;padding:10px 12px;border-radius:6px;font-size:15px;cursor:pointer}
+nav button.on,nav button:hover{background:var(--g2)}
+nav .flow{font-size:12px;opacity:.85;margin:16px 8px 0;line-height:1.5}
+main{flex:1;padding:18px 22px;max-width:1300px;overflow-x:auto}
+h2{color:var(--g);margin:0 0 4px}h3{color:var(--g);margin:22px 0 6px}
+.sub{color:var(--mut);margin:0 0 14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+button.b,a.b{background:var(--g);color:#fff;border:0;border-radius:6px;padding:7px 12px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}
+button.b.alt{background:#fff;color:var(--g);border:1px solid var(--g)}
+button.b.sm{padding:3px 8px;font-size:13px}
+button.b:hover{filter:brightness(1.15)}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:14px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--gl);color:var(--g);white-space:nowrap}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;background:var(--gray);border:1px solid var(--line);white-space:nowrap}
+.tag.ok{background:#dcfce7;border-color:#86efac;color:#14532d}
+.tag.warn{background:#fef3c7;border-color:#fcd34d;color:#78350f}
+.tag.bad{background:#fee2e2;border-color:#fca5a5;color:#7f1d1d}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin:8px 0}
+.bar label{font-size:12px;color:var(--mut);display:flex;flex-direction:column}
+input,select,textarea{font:inherit;padding:6px;border:1px solid var(--line);border-radius:5px;background:#fff;max-width:100%}
+textarea{width:100%;min-height:60px}
+dialog{border:0;border-radius:10px;padding:18px;width:min(640px,95vw);box-shadow:0 10px 40px #0005}
+dialog::backdrop{background:#0006}
+dialog label{display:block;margin:8px 0;font-weight:600;font-size:14px}
+dialog label input,dialog label select{width:100%;display:block;margin-top:2px;font-weight:400}
+dialog .help{font-weight:400;color:var(--mut);font-size:12px}
+.err{background:#fee2e2;color:#7f1d1d;padding:8px;border-radius:6px;margin:8px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.task{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--gray)}
+.task input{margin-top:4px}
+.star{cursor:pointer;color:#ca8a04;background:none;border:0;font-size:18px}
+.mut{color:var(--mut)}.small{font-size:13px}
+.note{background:var(--gl);border-left:4px solid var(--g);padding:8px 12px;margin:10px 0;font-size:14px}
+.ids{font-size:13px;word-break:break-word}
+.hist{font-size:12px;color:var(--mut);margin-top:10px;border-top:1px solid var(--line);padding-top:6px}
+#foot{padding:10px;text-align:center;font-size:12px;color:var(--mut)}
+@media print{#banner,nav,.noprint,#foot{display:none!important}#app{display:block}main{padding:0;max-width:none}body{background:#fff}.card{border:0;padding:0}#banner-p{display:block!important}}
+#banner-p{display:none;font-weight:700;border:1px solid #000;padding:4px;margin-bottom:8px}
+@media(max-width:760px){#app{flex-direction:column}nav{width:auto;display:flex;flex-wrap:wrap}nav h1,nav small,nav .flow{display:none}}
+</style>
+</head>
+<body>
+<div id="banner">Prototype. Not approved for operational VA records. Fictional sample data only. Do not enter patient or sensitive information.</div>
+<div id="app"><nav id="nav"></nav><main id="main"></main></div>
+<div id="foot">Independent prototype. Not a VA product. No VA seal. Not VA-approved. Data stays in this browser only.</div>
+<dialog id="dlg"></dialog>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+const KEY='gemsw.v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>{const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())};
+const TODAY=()=>fmt(new Date());
+const off=n=>{const d=new Date();d.setDate(d.getDate()+n);return fmt(d)};
+const nowIso=()=>new Date().toISOString();
+const daysLate=(due,asOf)=>Math.round((new Date(asOf||TODAY())-new Date(due))/864e5);
+const PROGRAMS=['Hazardous waste','Pharmaceutical waste','Regulated medical waste','Asbestos','Air quality','Stormwater / water','Chemical safety','Training','Other'];
+const LOCATIONS=['Main Building','Boiler Plant','Loading Dock','Outpatient Clinic','Maintenance Shop','Other'];
+const STREAMS=['Hazardous','Pharmaceutical','Biological / regulated medical','Asbestos'];
+const STREAM_PROG={'Hazardous':'Hazardous waste','Pharmaceutical':'Pharmaceutical waste','Biological / regulated medical':'Regulated medical waste','Asbestos':'Asbestos'};
+const AST=['Open','In progress','Awaiting evidence','Ready for verification','Verified closed'];
+const CLOSED='Verified closed';
+
+/* ---------- state ---------- */
+let db=load();
+function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return seed()}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function nid(p){db.seq[p]=(db.seq[p]||0)+1;return p+'-'+String(db.seq[p]).padStart(3,'0')}
+const get=(coll,id)=>db[coll].find(r=>r.id===id);
+function hist(id,field,from,to,reason){db.history.unshift({ts:nowIso(),id,field,from:from==null?'':String(from),to:to==null?'':String(to),reason:reason||'',by:db.user})}
+
+/* ---------- entity definitions ---------- */
+const people=()=>[...new Set([db.user,...db.pocs.map(p=>p.name)])];
+const findingOpts=()=>db.findings.map(f=>({v:f.id,l:f.id+' – '+f.title}));
+const assessOpts=()=>db.assess.map(a=>({v:a.id,l:a.id+' – '+a.program+' / '+a.location}));
+const EVH='One per line: a link or a short description of the proof (document number, file name). No patient or sensitive information.';
+const POC_LABELS=['Confirmed','Needs local verification','Documentation missing'];
+const ENT={
+ task:{c:'tasks',p:'TSK',n:'task',tr:['due','owner','done'],
+  f:[{k:'title',l:'What needs to be done?',t:'text',req:1},{k:'due',l:'Due date',t:'date',req:1},{k:'program',l:'Program',t:'combo',o:PROGRAMS},{k:'owner',l:'Who owns it?',t:'combo',o:people,req:1},{k:'notes',l:'Notes',t:'area'},{k:'_reason',l:'Reason for due date change',t:'text',tr:1,only:'edit'}],
+  pre(n,old,isNew){if(isNew){n.workDate=n.due<TODAY()?TODAY():n.due;n.done=false;n.top=false}},
+  v(n,old){if(old&&old.due!==n.due&&!n._reason)return'Please give a reason for changing the due date.'},
+  status:r=>r.done?'Done':(r.due<TODAY()?'Overdue':'Open'),due:r=>r.due},
+ poc:{c:'pocs',p:'POC',n:'POC',tr:['name','service'],
+  f:[{k:'name',l:'Name',t:'text',req:1},{k:'service',l:'Service / department',t:'text',req:1},{k:'program',l:'Environmental program',t:'combo',o:PROGRAMS},{k:'contact',l:'Contact (work info only)',t:'text'},{k:'label',l:'How sure are we?',t:'sel',o:POC_LABELS,req:1}],
+  status:r=>r.label},
+ setup:{c:'setup',p:'SET',n:'setup item',tr:['status'],
+  f:[{k:'group',l:'Group',t:'combo',o:['Procedures','Permits','Assessments','Waste records','Training records','Corrective actions','POCs'],req:1},{k:'item',l:'What do I need to find or confirm?',t:'text',req:1},{k:'status',l:'Status',t:'sel',o:POC_LABELS,req:1},{k:'owner',l:'Who can confirm it?',t:'combo',o:people},{k:'notes',l:'Notes',t:'area'}],
+  status:r=>r.status},
+ assess:{c:'assess',p:'ASM',n:'assessment',tr:['result','owner'],
+  f:[{k:'program',l:'Program',t:'combo',o:PROGRAMS,req:1},{k:'location',l:'Location',t:'combo',o:LOCATIONS,req:1},{k:'date',l:'Date',t:'date',req:1},{k:'ref',l:'Requirement reference (document and section)',t:'text',req:1},{k:'condition',l:'What did you see?',t:'area',req:1},{k:'result',l:'Result',t:'sel',o:['Meets requirement','Finding','Unable to verify','Not applicable'],req:1},{k:'explain',l:'Explanation',t:'area',help:'Required for "Not applicable" and "Unable to verify".'},{k:'owner',l:'Accountable POC',t:'combo',o:people},{k:'evidence',l:'Evidence',t:'area',help:EVH}],
+  v(n){if((n.result==='Not applicable'||n.result==='Unable to verify')&&!n.explain)return'Please explain why this is "'+n.result+'".'},
+  status:r=>r.result},
+ finding:{c:'findings',p:'FND',n:'finding',tr:['finalVerifier','finalVerifyDate'],
+  f:[{k:'assessId',l:'From assessment',t:'sel',o:assessOpts,req:1},{k:'title',l:'Short title',t:'text',req:1},{k:'detail',l:'What is wrong, and what rule is it against?',t:'area'},{k:'finalVerifier',l:'Final verifier name',t:'text',only:'edit',help:'Fill in only after ALL actions are verified closed.'},{k:'finalVerifyDate',l:'Final verification date',t:'date',only:'edit'},{k:'finalEvidence',l:'Final verification evidence',t:'area',only:'edit',help:EVH}],
+  v(n,old){const hasFinal=n.finalVerifier||n.finalVerifyDate||n.finalEvidence;if(!hasFinal)return;
+   if(!(n.finalVerifier&&n.finalVerifyDate&&n.finalEvidence))return'Final verification needs verifier name, date, and evidence.';
+   const acts=db.actions.filter(a=>a.findingId===(old&&old.id));
+   if(!acts.length)return'A finding needs at least one corrective action before it can be closed.';
+   if(acts.some(a=>a.status!==CLOSED))return'Every corrective action must be "Verified closed" first.'},
+  status:r=>findingStatus(r)},
+ action:{c:'actions',p:'CA',n:'corrective action',tr:['owner','due','status','priority'],
+  f:[{k:'findingId',l:'Finding',t:'sel',o:findingOpts,req:1},{k:'action',l:'Action required',t:'area',req:1},{k:'owner',l:'Responsible POC',t:'combo',o:people,req:1},{k:'priority',l:'Priority',t:'sel',o:['High','Medium','Low'],req:1},{k:'origDue',l:'Due date',t:'date',req:1,only:'new'},{k:'due',l:'Current due date',t:'date',req:1,only:'edit'},{k:'_reason',l:'Reason for due date change',t:'text',tr:1,only:'edit',help:'Required when the due date changes. The original due date is kept.'},{k:'next',l:'Next step',t:'text'},{k:'status',l:'Status',t:'sel',o:AST,req:1},{k:'evidence',l:'Evidence of completion',t:'area',help:EVH},{k:'verifier',l:'Verifier name',t:'text'},{k:'verifyDate',l:'Verification date',t:'date'}],
+  pre(n,old,isNew){if(isNew)n.due=n.origDue},
+  v(n,old){
+   if(old&&old.due!==n.due&&!n._reason)return'Please give a reason for changing the due date.';
+   if(n.status===CLOSED){const m=[];if(!n.evidence)m.push('evidence');if(!n.verifier)m.push('verifier name');if(!n.verifyDate)m.push('verification date');if(m.length)return'To mark "Verified closed" you need: '+m.join(', ')+'.'}},
+  status:r=>r.status,due:r=>r.due},
+ waste:{c:'waste',p:'WST',n:'waste record',tr:['shipDone','docReceived','review'],
+  f:[{k:'stream',l:'Waste stream',t:'sel',o:STREAMS,req:1},{k:'location',l:'Location',t:'combo',o:LOCATIONS},{k:'shipDate',l:'Shipment date',t:'date'},{k:'shipDone',l:'Shipment completed?',t:'sel',o:['No','Yes'],req:1},{k:'docType',l:'Document type',t:'text',help:'Do not assume. Each stream may use a different document. Confirm locally.'},{k:'docNumber',l:'Document number',t:'text'},{k:'vendor',l:'Vendor',t:'text'},{k:'qty',l:'Quantity',t:'text'},{k:'unit',l:'Unit',t:'combo',o:['lb','kg','containers','gal','other']},{k:'docDue',l:'Document due date (only if a local rule says so)',t:'date'},{k:'docReceived',l:'Date document received',t:'date',help:'Leave blank if not received.'},{k:'review',l:'Review status',t:'sel',o:['Not started','In review','Review complete'],req:1},{k:'reviewDate',l:'Review completed date',t:'date'},{k:'discrepancies',l:'Discrepancies found',t:'area'},{k:'followUp',l:'Follow-up',t:'area'},{k:'owner',l:'Accountable POC',t:'combo',o:people}],
+  v(n){if(n.review==='Review complete'&&!n.docReceived)return'A review cannot be complete if the document was not received.';if(n.docReceived&&n.shipDone!=='Yes'&&n.shipDate&&n.shipDate<=TODAY()&&false)return''},
+  status:r=>wasteStatus(r),due:r=>r.docDue},
+ train:{c:'training',p:'TRN',n:'training record',tr:['due','completed','owner'],
+  f:[{k:'topic',l:'Training topic',t:'text',req:1},{k:'audience',l:'Required audience',t:'text',req:1},{k:'owner',l:'Service / POC',t:'combo',o:people},{k:'program',l:'Program',t:'combo',o:PROGRAMS},{k:'version',l:'Course version',t:'text'},{k:'assigned',l:'Assignment date',t:'date'},{k:'due',l:'Due date',t:'date',req:1},{k:'completed',l:'Completion date',t:'date'},{k:'evidence',l:'Completion evidence',t:'area',help:'Example: transcript or roster reference.'},{k:'refresher',l:'Refresher date',t:'date'},{k:'system',l:'Official training system reference',t:'text',help:'Name the official system and course code if one applies. Confirm locally.'}],
+  status:r=>trainStatus(r),due:r=>r.due}
+};
+const ENTKEY={tasks:'task',pocs:'poc',setup:'setup',assess:'assess',findings:'finding',actions:'action',waste:'waste',training:'train'};
+
+/* ---------- derived status ---------- */
+function actionsOf(fid){return db.actions.filter(a=>a.findingId===fid)}
+function findingStatus(f){
+ const a=actionsOf(f.id);
+ if(!a.length)return'Open – no actions yet';
+ if(a.some(x=>x.status!==CLOSED))return'Open';
+ if(f.finalVerifier&&f.finalVerifyDate&&f.finalEvidence)return'Verified closed';
+ return'Ready for final verification';
+}
+function trainStatus(t){
+ if(t.completed&&!t.evidence)return'Completed – proof missing';
+ if(!t.completed&&t.due<TODAY())return'Overdue';
+ if(t.completed&&t.refresher&&t.refresher<=TODAY())return'Refresher due';
+ if(t.completed)return'Completed – documented';
+ return'Assigned – not due yet';
+}
+function wasteIssues(w){
+ const x=[];
+ if(w.shipDone==='Yes'&&!w.docReceived)x.push('Shipped, document not received');
+ if(!w.docReceived&&w.docDue&&w.docDue<TODAY())x.push('Document past due date');
+ if(w.docReceived&&w.review!=='Review complete')x.push('Document received, review not complete');
+ if(w.discrepancies&&w.review!=='Review complete')x.push('Discrepancy open');
+ if(w.discrepancies&&!w.followUp)x.push('Discrepancy has no follow-up');
+ return x;
+}
+function wasteStatus(w){return wasteIssues(w).length?'Exception':(w.shipDone!=='Yes'?'Shipment not done':'OK so far')}
+const isOverdueAction=(a,asOf)=>a.status!==CLOSED&&a.due<(asOf||TODAY());
+const progOfAction=a=>{const f=get('findings',a.findingId);const s=f&&get('assess',f.assessId);return s?s.program:''};
+const tag=(t,cls)=>`<span class="tag ${cls||''}">${esc(t)}</span>`;
+const statTag=s=>{const g=/closed|^OK|Meets|Confirmed|documented|Done|Review complete/.test(s)?'ok':/Overdue|Exception|missing|Missing|Finding|^Open – no/.test(s)?'bad':/verif|Unable|Awaiting|Refresher|progress|Ready|Open|Needs/.test(s)?'warn':'';return tag(s,g)};
+const evHtml=e=>!e?'<span class="tag bad">none</span>':esc(e).split('\n').filter(Boolean).map(l=>/^https?:\/\//.test(l.trim())?`<a href="${l.trim()}" target="_blank" rel="noopener">${l.trim()}</a>`:l).join('<br>');
+
+/* ---------- seed ---------- */
+function seed(){
+ const d={seq:{},user:'Pat Example (sample user)',tasks:[],pocs:[],setup:[],assess:[],findings:[],actions:[],waste:[],training:[],notes:{},history:[],mgmt:{decisions:'',resources:''}};
+ const me=d.user;
+ const add=(coll,p,o,when)=>{d.seq[p]=(d.seq[p]||0)+1;const id=p+'-'+String(d.seq[p]).padStart(3,'0');const ts=when||nowIso();d[coll].push({id,created:ts,updated:ts,enteredBy:me,...o});return id};
+ [['Jordan Lee (sample)','Facilities / Environmental Mgmt','Hazardous waste','Confirmed'],['Sam Patel (sample)','Pharmacy','Pharmaceutical waste','Needs local verification'],['Riley Chen (sample)','Housekeeping (EVS)','Regulated medical waste','Confirmed'],['Morgan Diaz (sample)','Engineering','Asbestos','Needs local verification'],['Casey Brooks (sample)','Safety Office','Training','Documentation missing'],['Taylor Nguyen (sample)','Boiler Plant','Air quality','Needs local verification'],['Reviewer Example (sample)','Designated reviewer','Other','Confirmed']]
+  .forEach(([name,service,program,label])=>add('pocs','POC',{name,service,program,contact:'sample@example.invalid',label}));
+ [['Guidebook','Find out if our site uses the GEMS or HERC name, and which guidebook and local procedures apply','Needs local verification'],['Procedures','Find local environmental program procedures','Needs local verification'],['Permits','List current permits and expiration dates','Documentation missing'],['Assessments','Find the last assessment and inspection reports','Needs local verification'],['Waste records','Locate waste manifests and shipping records','Needs local verification'],['Training records','Find training assignment and completion records','Documentation missing'],['Corrective actions','Get the list of open corrective actions','Needs local verification'],['POCs','Confirm a POC for each service','Confirmed']]
+  .forEach(([group,item,status])=>add('setup','SET',{group,item,status,owner:me,notes:''}));
+ const A1=add('assess','ASM',{program:'Hazardous waste',location:'Loading Dock',date:off(-10),ref:'Local procedure: container labels (sample)',condition:'Two containers had no accumulation start date.',result:'Finding',explain:'',owner:'Jordan Lee (sample)',evidence:'Photo file: dock_containers_sample.jpg'});
+ add('assess','ASM',{program:'Regulated medical waste',location:'Main Building',date:off(-6),ref:'Local procedure: storage room (sample)',condition:'Room locked and signs posted.',result:'Meets requirement',explain:'',owner:'Riley Chen (sample)',evidence:'Checklist note RMW-sample-1'});
+ add('assess','ASM',{program:'Pharmaceutical waste',location:'Main Building',date:off(-4),ref:'Local procedure: waste containers (sample)',condition:'Container log not seen. POC out until Monday.',result:'Unable to verify',explain:'Need to see the container log.',owner:'Sam Patel (sample)',evidence:''});
+ const A4=add('assess','ASM',{program:'Asbestos',location:'Boiler Plant',date:off(-3),ref:'Local procedure: survey on file (sample)',condition:'No survey found at the site.',result:'Finding',explain:'',owner:'Morgan Diaz (sample)',evidence:''});
+ add('assess','ASM',{program:'Air quality',location:'Boiler Plant',date:off(-2),ref:'Local procedure: boiler log (sample)',condition:'',result:'Not applicable',explain:'No boiler running in this area (sample).',owner:'Taylor Nguyen (sample)',evidence:''});
+ const A6=add('assess','ASM',{program:'Chemical safety',location:'Maintenance Shop',date:off(-30),ref:'Local procedure: spill kits (sample)',condition:'Spill kit tag expired.',result:'Finding',explain:'',owner:'Jordan Lee (sample)',evidence:'Photo file: spillkit_sample.jpg'});
+ const F1=add('findings','FND',{assessId:A1,title:'Containers missing start dates',detail:'Two containers had no start date.',finalVerifier:'',finalVerifyDate:'',finalEvidence:''});
+ const F2=add('findings','FND',{assessId:A4,title:'Asbestos survey not located',detail:'No survey at the site.',finalVerifier:'',finalVerifyDate:'',finalEvidence:''});
+ const F3=add('findings','FND',{assessId:A6,title:'Expired spill kit',detail:'Tag expired.',finalVerifier:'Reviewer Example (sample)',finalVerifyDate:off(-17),finalEvidence:'Re-check photo (sample)'});
+ add('actions','CA',{findingId:F1,action:'Add start dates to both containers',owner:'Jordan Lee (sample)',priority:'High',origDue:off(-3),due:off(-3),next:'Confirm with dock lead',status:'In progress',evidence:'',verifier:'',verifyDate:''});
+ add('actions','CA',{findingId:F1,action:'Retrain dock staff on labels',owner:'Casey Brooks (sample)',priority:'Medium',origDue:off(5),due:off(5),next:'Pick a class date',status:'Open',evidence:'',verifier:'',verifyDate:''});
+ const C3=add('actions','CA',{findingId:F2,action:'Find or order the asbestos survey',owner:'Morgan Diaz (sample)',priority:'High',origDue:off(-1),due:off(7),next:'Wait for records office',status:'Awaiting evidence',evidence:'',verifier:'',verifyDate:''});
+ add('actions','CA',{findingId:F2,action:'Post survey summary at the site',owner:'Morgan Diaz (sample)',priority:'Medium',origDue:off(14),due:off(14),next:'',status:'Open',evidence:'',verifier:'',verifyDate:''});
+ add('actions','CA',{findingId:F3,action:'Replace expired spill kit',owner:'Jordan Lee (sample)',priority:'Medium',origDue:off(-20),due:off(-20),next:'',status:CLOSED,evidence:'Photo: new spill kit tag (sample)',verifier:'Reviewer Example (sample)',verifyDate:off(-18)});
+ d.history.push({ts:nowIso(),id:C3,field:'due',from:off(-1),to:off(7),reason:'Waiting on records office (sample)',by:me});
+ const w=(o)=>add('waste','WST',{location:'Loading Dock',shipDate:'',shipDone:'No',docType:'',docNumber:'',vendor:'',qty:'',unit:'',docDue:'',docReceived:'',review:'Not started',reviewDate:'',discrepancies:'',followUp:'',owner:'',...o});
+ w({stream:'Hazardous',shipDate:off(-12),shipDone:'Yes',docType:'Hazardous waste manifest (confirm locally)',docNumber:'SAMPLE-0001',vendor:'Sample Vendor A',qty:'220',unit:'lb',docReceived:off(-5),review:'Review complete',reviewDate:off(-4),owner:'Jordan Lee (sample)'});
+ w({stream:'Hazardous',shipDate:off(-9),shipDone:'Yes',docType:'Hazardous waste manifest (confirm locally)',docNumber:'SAMPLE-0002',vendor:'Sample Vendor A',qty:'110',unit:'lb',owner:'Jordan Lee (sample)'});
+ w({stream:'Pharmaceutical',shipDate:off(-7),shipDone:'Yes',docType:'Shipping record (confirm locally)',docNumber:'SAMPLE-P-01',vendor:'Sample Vendor B',qty:'40',unit:'lb',docReceived:off(-3),review:'In review',discrepancies:'Quantity differs from pickup sheet (sample)',followUp:'Ask vendor for corrected record',owner:'Sam Patel (sample)'});
+ w({stream:'Biological / regulated medical',shipDate:off(-14),shipDone:'Yes',docType:'Tracking form (confirm locally)',docNumber:'SAMPLE-RM-70',vendor:'Sample Vendor C',qty:'12',unit:'containers',docReceived:off(-10),review:'Review complete',reviewDate:off(-9),owner:'Riley Chen (sample)'});
+ w({stream:'Biological / regulated medical',shipDate:off(-2),shipDone:'Yes',docType:'Tracking form (confirm locally)',docNumber:'SAMPLE-RM-77',vendor:'Sample Vendor C',qty:'9',unit:'containers',owner:'Riley Chen (sample)'});
+ w({stream:'Asbestos',shipDate:off(10),shipDone:'No',docType:'Waste shipment record (confirm locally)',vendor:'Sample Vendor D',owner:'Morgan Diaz (sample)',location:'Boiler Plant'});
+ const t=o=>add('training','TRN',{owner:'',program:'Training',version:'',assigned:'',completed:'',evidence:'',refresher:'',system:'Official training system (confirm locally)',...o});
+ t({topic:'Hazardous waste handling',audience:'Dock staff',owner:'Casey Brooks (sample)',program:'Hazardous waste',version:'v2 (sample)',assigned:off(-40),due:off(-10)});
+ t({topic:'Regulated medical waste basics',audience:'EVS staff',owner:'Riley Chen (sample)',program:'Regulated medical waste',version:'v3 (sample)',assigned:off(-30),due:off(-5),completed:off(-8)});
+ t({topic:'Spill response',audience:'Maintenance staff',owner:'Jordan Lee (sample)',program:'Chemical safety',version:'v1 (sample)',assigned:off(-60),due:off(-30),completed:off(-33),evidence:'Transcript export (sample)',refresher:off(330)});
+ t({topic:'Asbestos awareness',audience:'Engineering staff',owner:'Morgan Diaz (sample)',program:'Asbestos',version:'v1 (sample)',assigned:off(-5),due:off(25)});
+ t({topic:'Pharmaceutical waste basics',audience:'Pharmacy staff',owner:'Sam Patel (sample)',program:'Pharmaceutical waste',version:'v2 (sample)',assigned:off(-380),due:off(-365),completed:off(-370),evidence:'Transcript export (sample)',refresher:off(-5)});
+ const k=(o)=>add('tasks','TSK',{program:'',owner:me,notes:'',done:false,top:false,doneDate:'',...o});
+ k({title:'Follow up with Jordan Lee on overdue action CA-001',due:off(-1),workDate:off(-1),top:true,program:'Hazardous waste'});
+ k({title:'Check if manifest SAMPLE-0002 copy arrived',due:TODAY(),workDate:TODAY(),top:true,program:'Hazardous waste'});
+ k({title:'Ask Pharmacy for the container log',due:TODAY(),workDate:TODAY(),top:true,program:'Pharmaceutical waste'});
+ k({title:'Look for the permit list',due:off(2),workDate:off(2)});
+ k({title:'Prepare Friday accomplishments log',due:off(3),workDate:off(3)});
+ k({title:'Walk the loading dock',due:off(-1),workDate:off(-1),done:true,doneDate:off(-1)});
+ return d;
+}
+
+/* ---------- navigation / render ---------- */
+const VIEWS=[['myday','My Day'],['setup','Program Setup'],['assess','Assessments & Findings'],['actions','Corrective Actions'],['waste','Waste Document Reviews'],['training','Training'],['reports','Reports'],['history','Change History']];
+let view='myday';
+const FIL={};
+function renderNav(){
+ $('#nav').innerHTML=`<h1>GEMS Workbench</h1><small>GEMS / HERC · Prototype</small>`+VIEWS.map(([k,l])=>`<button class="${k===view?'on':''}" data-act="nav" data-v="${k}">${l}</button>`).join('')+
+ `<div class="flow">Flow:<br>Daily checklist → assessment → finding → assigned action → evidence → verification → weekly report</div><div class="flow"><button class="b alt sm" data-act="reset" style="color:#fff;border-color:#fff">Reset sample data</button></div>`;
+}
+function render(){
+ const fid=document.activeElement&&document.activeElement.id;const pos=document.activeElement&&document.activeElement.selectionStart;
+ renderNav();
+ $('#main').innerHTML=({myday:vMyDay,setup:vSetup,assess:vAssess,actions:vActions,waste:vWaste,training:vTraining,reports:vReports,history:vHistory})[view]();
+ if(fid&&$('#'+fid)){const el=$('#'+fid);el.focus();try{el.setSelectionRange(pos,pos)}catch(e){}}
+}
+
+/* ---------- generic list with filters ---------- */
+function listFor(ek,rows,cols,opt={}){
+ const E=ENT[ek];const F=FIL[opt.key||ek]=FIL[opt.key||ek]||{};
+ const progOf=opt.progOf||(r=>r.program||'');
+ const all=rows;
+ const opts=(fn)=>[...new Set(all.map(fn).filter(Boolean))].sort();
+ const sel=(k,l,vals)=>`<label>${l}<select data-act="fil" data-k="${opt.key||ek}" data-f="${k}"><option value="">All</option>${vals.map(v=>`<option ${F[k]===v?'selected':''}>${esc(v)}</option>`).join('')}</select></label>`;
+ let bar=`<div class="bar noprint"><label>Search<input id="q-${opt.key||ek}" data-act="fil" data-k="${opt.key||ek}" data-f="q" value="${esc(F.q||'')}" placeholder="Type to search"></label>`;
+ bar+=sel('program','Program',opts(progOf));
+ if(opt.loc!==false)bar+=sel('location','Location',opts(opt.locOf||(r=>r.location)));
+ bar+=sel('owner','Owner',opts(r=>r.owner));
+ bar+=sel('status','Status',opts(E.status));
+ if(E.due)bar+=`<label>Due on or before<input type="date" data-act="fil" data-k="${opt.key||ek}" data-f="before" value="${esc(F.before||'')}"></label>`;
+ bar+=`<button class="b alt sm" data-act="filclear" data-k="${opt.key||ek}">Clear</button></div>`;
+ const q=(F.q||'').toLowerCase();
+ const shown=all.filter(r=>(!q||JSON.stringify(r).toLowerCase().includes(q))&&(!F.program||progOf(r)===F.program)&&(!F.location||(opt.locOf||(x=>x.location))(r)===F.location)&&(!F.owner||r.owner===F.owner)&&(!F.status||E.status(r)===F.status)&&(!F.before||(E.due(r)&&E.due(r)<=F.before)));
+ const tbl=shown.length?`<table><tr>${cols.map(c=>`<th>${c[0]}</th>`).join('')}<th class="noprint"></th></tr>${shown.map(r=>`<tr>${cols.map(c=>`<td>${c[1](r)}</td>`).join('')}<td class="noprint">${(opt.extra?opt.extra(r):'')}<button class="b alt sm" data-act="edit" data-e="${ek}" data-id="${r.id}">Edit</button></td></tr>`).join('')}</table>`:'<p class="mut">No records match.</p>';
+ return bar+`<p class="small mut">${shown.length} of ${all.length} shown</p>`+tbl;
+}
+const idCell=r=>`<b>${r.id}</b><br><span class="mut small">${esc((r.updated||'').slice(0,10))}</span>`;
+
+/* ---------- My Day ---------- */
+function vMyDay(){
+ const td=TODAY();const open=db.tasks.filter(t=>!t.done);
+ const overdue=open.filter(t=>t.due<td),dueToday=open.filter(t=>t.due===td),planned=open.filter(t=>t.due>td&&t.workDate<=td),later=open.filter(t=>t.due>td&&t.workDate>td);
+ const top=open.filter(t=>t.top).slice(0,3);
+ const carry=open.filter(t=>t.workDate<td).length;
+ const nt=db.notes[td]||{};
+ const row=t=>`<div class="task"><input type="checkbox" data-act="done" data-id="${t.id}" ${t.done?'checked':''}><div style="flex:1"><b>${esc(t.title)}</b> <span class="mut small">${t.id}</span><br><span class="small mut">Due ${t.due}${t.due<td?` · ${tag(daysLate(t.due)+' days late','bad')}`:''}${t.workDate<td&&!t.done?' · planned for '+t.workDate:''}${t.program?' · '+esc(t.program):''} · Owner: ${esc(t.owner)}</span></div><button class="star" title="Top three" data-act="top" data-id="${t.id}">${t.top?'★':'☆'}</button><button class="b alt sm" data-act="edit" data-e="task" data-id="${t.id}">Edit</button></div>`;
+ const sec=(h,a)=>a.length?`<h3>${h} (${a.length})</h3>${a.map(row).join('')}`:'';
+ return `<h2>My Day</h2><p class="sub">${td}. Start here. Check things off as you go.</p>
+ <div class="grid"><div class="card"><b>My top three</b>${top.length?top.map(t=>`<div class="task"><span>★</span> ${esc(t.title)} <span class="mut small">${t.id}</span></div>`).join(''):'<p class="mut">Click a ☆ below to pick up to three.</p>'}</div>
+ <div class="card"><b>Today at a glance</b><p>${overdue.length} overdue · ${dueToday.length} due today · ${db.actions.filter(a=>isOverdueAction(a)).length} overdue corrective actions</p><p class="small mut">Counts of entered records only. Missing records are not proof that nothing is wrong.</p>
+ <div class="row noprint"><button class="b" data-act="addtask">+ Add task</button><button class="b alt" data-act="stdlist">Add today's standard checklist</button>${carry?`<button class="b alt" data-act="carry">Carry ${carry} unfinished to today</button>`:''}</div></div></div>
+ <div class="card">${sec('Overdue',overdue)}${sec('Due today',dueToday)}${sec('Planned for today',planned)}${sec('Coming up',later)}${open.length?'':'<p>All done. Nice work.</p>'}
+ ${db.tasks.some(t=>t.done)?`<h3>Done</h3>${db.tasks.filter(t=>t.done).slice(-5).map(row).join('')}`:''}</div>
+ <div class="card"><b>Daily notes for ${td}</b>${[['checked','What did I check?'],['found','What did I find?'],['next','What comes next?']].map(([k,l])=>`<label class="small mut">${l}<textarea data-act="note" data-k="${k}">${esc(nt[k]||'')}</textarea></label>`).join('')}</div>
+ <div class="note">Next in the flow: log an <a href="#" data-act="nav" data-v="assess">assessment</a>. If it has a finding, add corrective actions, attach evidence, and get it verified.</div>`;
+}
+
+/* ---------- Program Setup ---------- */
+function vSetup(){
+ const sc={};db.setup.forEach(s=>sc[s.status]=(sc[s.status]||0)+1);
+ return `<h2>Program Setup</h2><p class="sub">Find what exists and who owns it. Be honest about what you have not confirmed.</p>
+ <div class="note">Only "Confirmed" means you checked it. "Needs local verification" and "Documentation missing" are not proof of compliance.</div>
+ <div class="row noprint"><button class="b" data-act="add" data-e="setup">+ Add checklist item</button> ${POC_LABELS.map(l=>`${statTag(l)} ${sc[l]||0}`).join(' &nbsp; ')}</div>
+ ${listFor('setup',db.setup,[['ID',idCell],['Group',r=>esc(r.group)],['Item',r=>esc(r.item)],['Status',r=>`<select data-act="setupstat" data-id="${r.id}">${POC_LABELS.map(l=>`<option ${l===r.status?'selected':''}>${l}</option>`).join('')}</select>`],['Who can confirm',r=>esc(r.owner||'')],['Notes',r=>esc(r.notes||'')]],{loc:false,progOf:r=>r.group})}
+ <h3>POC directory</h3><div class="row noprint"><button class="b" data-act="add" data-e="poc">+ Add POC</button></div>
+ ${listFor('poc',db.pocs,[['ID',idCell],['Name',r=>esc(r.name)],['Service',r=>esc(r.service)],['Program',r=>esc(r.program||'')],['Contact',r=>esc(r.contact||'')],['Status',r=>statTag(r.label)]],{key:'poc',loc:false,extra:null,locOf:()=>'' ,progOf:r=>r.program||''}).replace(/<label>Owner[\s\S]*?<\/label>/,'')}`;
+}
+
+/* ---------- Assessments & Findings ---------- */
+function vAssess(){
+ return `<h2>Assessments and Findings</h2><p class="sub">Write down what you saw and what proves it. One finding can have many corrective actions.</p>
+ <div class="row noprint"><button class="b" data-act="add" data-e="assess">+ Log assessment</button></div>
+ ${listFor('assess',db.assess,[['ID',idCell],['Date',r=>r.date],['Program / Location',r=>esc(r.program)+'<br>'+esc(r.location)],['Requirement',r=>esc(r.ref)],['What I saw',r=>esc(r.condition)+(r.explain?`<br><i class="small">${esc(r.explain)}</i>`:'')],['Result',r=>statTag(r.result)],['Accountable',r=>esc(r.owner||'')],['Evidence',r=>evHtml(r.evidence)],['Finding',r=>{const f=db.findings.filter(x=>x.assessId===r.id);return f.map(x=>x.id).join(', ')||(r.result==='Finding'?`<button class="b sm noprint" data-act="newfinding" data-id="${r.id}">+ Create finding</button>`:'')}]])}
+ <h3>Findings</h3>
+ ${listFor('finding',db.findings,[['ID',idCell],['Title',r=>esc(r.title)+'<br><span class="small mut">'+esc(r.detail||'')+'</span>'],['From',r=>r.assessId],['Actions',r=>{const a=actionsOf(r.id);return a.length?`${a.filter(x=>x.status===CLOSED).length} of ${a.length} closed<br><span class="small">${a.map(x=>x.id).join(', ')}</span>`:'<span class="tag bad">none</span>'}],['Status',r=>statTag(findingStatus(r))],['Final verification',r=>r.finalVerifier?esc(r.finalVerifier)+' · '+r.finalVerifyDate:'<span class="mut">not yet</span>']],{key:'finding',loc:false,progOf:r=>{const a=get('assess',r.assessId);return a?a.program:''},locOf:r=>{const a=get('assess',r.assessId);return a?a.location:''},extra:r=>`<button class="b sm" data-act="newaction" data-id="${r.id}">+ Action</button> `}).replace(/<label>Owner[\s\S]*?<\/label>/,'')}
+ <p class="small mut">A finding stays open until every action is verified closed AND final verification (name, date, evidence) is recorded.</p>`;
+}
+
+/* ---------- Corrective Actions ---------- */
+function vActions(){
+ return `<h2>Corrective Actions</h2><p class="sub">Each action needs an owner, a due date, and proof. To close one you must record evidence, a verifier, and a date.</p>
+ <div class="row noprint"><button class="b" data-act="add" data-e="action">+ Add action</button></div>
+ ${listFor('action',db.actions,[['ID',idCell],['Finding',r=>{const f=get('findings',r.findingId);return r.findingId+(f?'<br><span class="small">'+esc(f.title)+'</span>':'')}],['Action required',r=>esc(r.action)],['Responsible POC',r=>esc(r.owner)],['Priority',r=>r.priority],['Original due',r=>r.origDue],['Current due',r=>r.due+(isOverdueAction(r)?'<br>'+tag(daysLate(r.due)+' days late','bad'):'')],['Next step',r=>esc(r.next||'')],['Status',r=>statTag(r.status)],['Evidence / verifier',r=>evHtml(r.evidence)+(r.verifier?`<br><span class="small">Verified by ${esc(r.verifier)} on ${r.verifyDate}</span>`:'')]],{progOf:progOfAction,locOf:r=>{const f=get('findings',r.findingId);const a=f&&get('assess',f.assessId);return a?a.location:''}})}`;
+}
+
+/* ---------- Waste ---------- */
+const WNOTE={'Hazardous':'Check which manifest and deadline rules your site uses.','Pharmaceutical':'Pharmaceutical waste may use a different record than hazardous waste. Confirm locally.','Biological / regulated medical':'Tracking forms and timelines depend on the state and vendor. Confirm locally.','Asbestos':'Asbestos waste shipments have their own record. Confirm locally.'};
+function vWaste(){
+ const ex=db.waste.filter(w=>wasteIssues(w).length);
+ let h=`<h2>Waste Document Reviews</h2><p class="sub">Three separate steps: shipment done, document received, review done. Do not assume one rule fits every waste stream.</p>
+ <div class="card"><b>${ex.length} exception${ex.length===1?'':'s'}</b>${ex.map(w=>`<div class="small">${w.id} (${esc(w.stream)}, ${esc(w.docNumber||'no number')}): ${wasteIssues(w).join('; ')}</div>`).join('')||'<p class="mut">None found in entered records. That does not prove other shipments were reviewed.</p>'}</div>
+ <div class="row noprint"><button class="b" data-act="add" data-e="waste">+ Add waste record</button></div>`;
+ const col=[['ID',idCell],['Shipment',r=>(r.shipDate||'–')+'<br>'+(r.shipDone==='Yes'?tag('Completed','ok'):tag('Not completed'))],['Document',r=>esc(r.docType||'')+'<br><b>'+esc(r.docNumber||'no number')+'</b>'],['Vendor',r=>esc(r.vendor||'')],['Qty',r=>esc((r.qty||'')+' '+(r.unit||''))],['Doc received',r=>r.docReceived?tag(r.docReceived,'ok'):tag('Not received','warn')+(r.docDue?'<br><span class="small">due '+r.docDue+'</span>':'')],['Review',r=>statTag(r.review)+(r.reviewDate?'<br><span class="small">'+r.reviewDate+'</span>':'')],['Discrepancies / follow-up',r=>esc(r.discrepancies||'')+(r.followUp?'<br><i class="small">'+esc(r.followUp)+'</i>':'')],['Flags',r=>wasteIssues(r).map(i=>tag(i,'bad')).join(' ')||'']];
+ STREAMS.forEach(s=>{h+=`<h3>${s}</h3><p class="small mut">${WNOTE[s]}</p>`+listFor('waste',db.waste.filter(w=>w.stream===s),col,{key:'waste-'+s,progOf:()=>s})});
+ return h;
+}
+
+/* ---------- Training ---------- */
+function vTraining(){
+ const c={};db.training.forEach(t=>{const s=trainStatus(t);c[s]=(c[s]||0)+1});
+ return `<h2>Training</h2><p class="sub">Overdue (not done) is different from done but proof is missing. Check the official training system for the real record.</p>
+ <div class="row noprint"><button class="b" data-act="add" data-e="train">+ Add training record</button> ${Object.entries(c).map(([k,v])=>statTag(k)+' '+v).join(' &nbsp; ')}</div>
+ ${listFor('train',db.training,[['ID',idCell],['Topic',r=>esc(r.topic)+'<br><span class="small mut">'+esc(r.version||'')+'</span>'],['Audience',r=>esc(r.audience)],['Service / POC',r=>esc(r.owner||'')],['Assigned',r=>r.assigned||''],['Due',r=>r.due],['Completed',r=>r.completed||'–'],['Status',r=>statTag(trainStatus(r))],['Evidence',r=>evHtml(r.completed?r.evidence:'')||''],['Refresher',r=>r.refresher||''],['System',r=>esc(r.system||'')]],{loc:false})}`;
+}
+
+/* ---------- History ---------- */
+function vHistory(){
+ const F=FIL.hist=FIL.hist||{};const q=(F.q||'').toLowerCase();
+ const rows=db.history.filter(h=>!q||JSON.stringify(h).toLowerCase().includes(q));
+ return `<h2>Change History</h2><p class="sub">Every change to owner, due date, status, and key fields.</p><div class="bar"><label>Search by ID or word<input id="q-hist" data-act="fil" data-k="hist" data-f="q" value="${esc(F.q||'')}"></label></div>
+ <table><tr><th>When</th><th>Record</th><th>Field</th><th>From</th><th>To</th><th>Reason</th><th>Entered by</th></tr>${rows.slice(0,300).map(h=>`<tr><td>${h.ts.replace('T',' ').slice(0,16)}</td><td>${h.id}</td><td>${esc(h.field)}</td><td>${esc(h.from)}</td><td>${esc(h.to)}</td><td>${esc(h.reason)}</td><td>${esc(h.by)}</td></tr>`).join('')}</table>`;
+}
+
+/* ---------- Reports ---------- */
+const mondayOf=()=>{const d=new Date();const k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);return fmt(d)};
+let RP={kind:'monday',from:mondayOf(),to:off(6-((new Date().getDay()+6)%7)),prog:''};
+const REPORTS={monday:'Monday planning brief',friday:'Friday accomplishments log',actions:'Open and overdue corrective actions',gaps:'Missing evidence and waste-document exceptions',training:'Training status',mgmt:'Management-review summary'};
+function buildReport(){
+ const {kind,from,to,prog}=RP;const asOf=to;
+ const ok=p=>!prog||p===prog;const inR=d=>d&&d>=from&&d<=to;
+ const R=[];const push=(cells,id)=>R.push({cells,id});
+ let cols,notes=[];
+ const ownerStr=x=>x||'(not assigned)';
+ if(kind==='monday'){
+  cols=['Type','ID','Item','Accountable','Due','Status'];
+  db.tasks.filter(t=>!t.done&&t.due<=to&&ok(t.program)).forEach(t=>push(['Task',t.id,t.title+(t.top?' ★':''),t.owner,t.due,t.due<asOf?'Overdue':'Open'],t.id));
+  db.actions.filter(a=>a.status!==CLOSED&&a.due<=to&&ok(progOfAction(a))).forEach(a=>push(['Corrective action',a.id,a.action,a.owner,a.due,a.status+(isOverdueAction(a,asOf)?' (overdue)':'')],a.id));
+  db.waste.filter(w=>ok(STREAM_PROG[w.stream])&&wasteIssues(w).length).forEach(w=>push(['Waste document',w.id,w.stream+' '+(w.docNumber||'')+': '+wasteIssues(w).join('; '),ownerStr(w.owner),w.docDue||'',w.review],w.id));
+  db.training.filter(t=>ok(t.program)&&(trainStatus(t)==='Overdue'||/missing|Refresher/.test(trainStatus(t)))).forEach(t=>push(['Training',t.id,t.topic,ownerStr(t.owner),t.due,trainStatus(t)],t.id));
+  notes.push('Overdue means due before the end of the date range. ★ marks a top-three priority.');
+ }else if(kind==='friday'){
+  cols=['Type','ID','What happened','Accountable','Date'];
+  db.tasks.filter(t=>t.done&&inR(t.doneDate)&&ok(t.program)).forEach(t=>push(['Task done',t.id,t.title,t.owner,t.doneDate],t.id));
+  db.assess.filter(a=>inR(a.date)&&ok(a.program)).forEach(a=>push(['Assessment',a.id,a.program+' / '+a.location+': '+a.result,a.owner,a.date],a.id));
+  db.findings.filter(f=>inR(f.created.slice(0,10))&&ok((get('assess',f.assessId)||{}).program)).forEach(f=>push(['Finding logged',f.id,f.title,'',f.created.slice(0,10)],f.id));
+  db.actions.filter(a=>a.status===CLOSED&&inR(a.verifyDate)&&ok(progOfAction(a))).forEach(a=>push(['Action verified closed',a.id,a.action+' (verified by '+a.verifier+')',a.owner,a.verifyDate],a.id));
+  db.waste.filter(w=>inR(w.reviewDate)&&ok(STREAM_PROG[w.stream])).forEach(w=>push(['Waste review done',w.id,w.stream+' '+w.docNumber,w.owner,w.reviewDate],w.id));
+  db.training.filter(t=>inR(t.completed)&&ok(t.program)).forEach(t=>push(['Training completed',t.id,t.topic,t.owner,t.completed],t.id));
+  Object.keys(db.notes).filter(inR).sort().forEach(d=>{const n=db.notes[d];push(['Daily note','NOTE-'+d,['Checked: '+(n.checked||'–'),'Found: '+(n.found||'–'),'Next: '+(n.next||'–')].join(' | '),db.user,d],'NOTE-'+d)});
+ }else if(kind==='actions'){
+  cols=['ID','Finding','Action','Responsible POC','Priority','Original due','Current due','Days late','Due changes','Status'];
+  db.actions.filter(a=>a.status!==CLOSED&&ok(progOfAction(a))).forEach(a=>{const ch=db.history.filter(h=>h.id===a.id&&h.field==='due').length;push([a.id,a.findingId,a.action,a.owner,a.priority,a.origDue,a.due,isOverdueAction(a,asOf)?daysLate(a.due,asOf):0,ch,a.status],a.id)});
+  notes.push('Shows every action not yet verified closed. Days late counted to the end of the date range.');
+ }else if(kind==='gaps'){
+  cols=['Type','ID','What is missing or wrong','Accountable','Date'];
+  db.assess.filter(a=>ok(a.program)&&a.result!=='Not applicable'&&!a.evidence).forEach(a=>push(['Assessment without evidence',a.id,a.program+' / '+a.location+' ('+a.result+')',a.owner,a.date],a.id));
+  db.actions.filter(a=>ok(progOfAction(a))&&a.status!==CLOSED&&['Awaiting evidence','Ready for verification'].includes(a.status)&&!a.evidence).forEach(a=>push(['Action without evidence',a.id,a.action+' ['+a.status+']',a.owner,a.due],a.id));
+  db.training.filter(t=>ok(t.program)&&t.completed&&!t.evidence).forEach(t=>push(['Training proof missing',t.id,t.topic+' completed '+t.completed+' but no proof recorded',t.owner,t.completed],t.id));
+  db.waste.filter(w=>ok(STREAM_PROG[w.stream])).forEach(w=>wasteIssues(w).forEach(i=>push(['Waste document exception',w.id,w.stream+' '+(w.docNumber||'(no number)')+': '+i,ownerStr(w.owner),w.shipDate],w.id)));
+  db.setup.filter(s=>s.status==='Documentation missing').forEach(s=>push(['Setup: documentation missing',s.id,s.item,s.owner,''],s.id));
+ }else if(kind==='training'){
+  cols=['ID','Topic','Audience','Service / POC','Version','Assigned','Due','Completed','Status','Refresher'];
+  db.training.filter(t=>ok(t.program)).forEach(t=>push([t.id,t.topic,t.audience,t.owner,t.version,t.assigned,t.due,t.completed,trainStatus(t),t.refresher],t.id));
+  notes.push('Overdue = not completed and past due. "Proof missing" = completion date entered but no evidence. Check the official training system for the authoritative record.');
+ }else{
+  cols=['Measure (count of entered records)','Count','Record IDs'];
+  const m=(label,arr)=>push([label,arr.length,arr.map(x=>x.id).join(', ')],arr.length?arr.map(x=>x.id).join(','):label);
+  const A=db.actions.filter(a=>ok(progOfAction(a)));
+  m('Findings not verified closed',db.findings.filter(f=>ok((get('assess',f.assessId)||{}).program)&&findingStatus(f)!=='Verified closed'));
+  m('Corrective actions open',A.filter(a=>a.status!==CLOSED));
+  m('Corrective actions overdue',A.filter(a=>isOverdueAction(a,asOf)));
+  m('Actions ready for verification',A.filter(a=>a.status==='Ready for verification'));
+  m('Actions with changed due dates',A.filter(a=>db.history.some(h=>h.id===a.id&&h.field==='due')));
+  m('Waste records with exceptions',db.waste.filter(w=>ok(STREAM_PROG[w.stream])&&wasteIssues(w).length));
+  m('Training overdue',db.training.filter(t=>ok(t.program)&&trainStatus(t)==='Overdue'));
+  m('Training proof missing',db.training.filter(t=>ok(t.program)&&/missing/.test(trainStatus(t))));
+  m('Setup items not confirmed',db.setup.filter(s=>s.status!=='Confirmed'));
+  notes.push('These are counts of what has been entered. There is no compliance score. Missing records are not proof of compliance.');
+ }
+ const ids=[...new Set(R.flatMap(r=>String(r.id).split(',')).filter(Boolean))];
+ return {cols,rows:R,ids,notes};
+}
+function vReports(){
+ const rp=buildReport();
+ const mg=RP.kind==='mgmt';
+ return `<h2>Reports</h2><p class="sub">Pick a report, a date range, and a scope. Then print or export.</p>
+ <div class="bar noprint"><label>Report<select data-act="rp" data-f="kind">${Object.entries(REPORTS).map(([k,l])=>`<option value="${k}" ${k===RP.kind?'selected':''}>${l}</option>`).join('')}</select></label>
+ <label>From<input type="date" data-act="rp" data-f="from" value="${RP.from}"></label><label>To<input type="date" data-act="rp" data-f="to" value="${RP.to}"></label>
+ <label>Program scope<select data-act="rp" data-f="prog"><option value="">All programs</option>${PROGRAMS.map(p=>`<option ${p===RP.prog?'selected':''}>${p}</option>`).join('')}</select></label>
+ <button class="b" data-act="print">Print / PDF</button><button class="b alt" data-act="csv">Export CSV</button></div>
+ <div class="card" id="report"><div id="banner-p">Prototype. Not approved for operational VA records. Fictional sample data.</div>
+ <h2>${REPORTS[RP.kind]}</h2>
+ <p class="small"><b>Date range:</b> ${RP.from} to ${RP.to} · <b>Scope:</b> ${RP.prog||'All programs'} · <b>Generated:</b> ${nowIso().replace('T',' ').slice(0,16)} · <b>Prepared by:</b> ${esc(db.user)}</p>
+ ${rp.rows.length?`<table><tr>${rp.cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>${rp.rows.map(r=>`<tr>${r.cells.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>`:'<p>No records in this report. That does not prove nothing is wrong. It means nothing was entered that matches.</p>'}
+ <p class="ids"><b>Supporting record IDs (${rp.ids.length}):</b> ${esc(rp.ids.join(', ')||'none')}</p>
+ ${rp.notes.map(n=>`<p class="small mut">${esc(n)}</p>`).join('')}
+ ${mg?`<h3>Decisions needed</h3><textarea data-act="mgmt" data-k="decisions" placeholder="What does management need to decide?">${esc(db.mgmt.decisions)}</textarea><h3>Resources needed</h3><textarea data-act="mgmt" data-k="resources" placeholder="People, time, money, access?">${esc(db.mgmt.resources)}</textarea>`:''}
+ </div>`;
+}
+function csvOut(){
+ const rp=buildReport();const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+ const lines=[['Report',REPORTS[RP.kind]],['Date range',RP.from+' to '+RP.to],['Scope',RP.prog||'All programs'],['Generated',nowIso()],['Note','Prototype. Not approved for operational VA records.'],[]].map(r=>r.map(q).join(','));
+ lines.push(rp.cols.map(q).join(','));rp.rows.forEach(r=>lines.push(r.cells.map(q).join(',')));
+ lines.push('',['Supporting record IDs',rp.ids.join('; ')].map(q).join(','));
+ if(RP.kind==='mgmt'){lines.push(['Decisions needed',db.mgmt.decisions].map(q).join(','),['Resources needed',db.mgmt.resources].map(q).join(','))}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));a.download=RP.kind+'_'+RP.from+'_to_'+RP.to+'.csv';a.click();
+}
+
+/* ---------- forms ---------- */
+function fieldHtml(f,val){
+ const v=val==null?'':val;const id='f_'+f.k;let inp;
+ const o=typeof f.o==='function'?f.o():(f.o||[]);
+ const on=o.map(x=>typeof x==='string'?{v:x,l:x}:x);
+ if(f.t==='area')inp=`<textarea name="${f.k}">${esc(v)}</textarea>`+(f.k==='evidence'?`<input type="file" name="_files" multiple><span class="help"> Attachments: only the file name is saved in this prototype.</span>`:'');
+ else if(f.t==='sel')inp=`<select name="${f.k}">${f.req?'':'<option value=""></option>'}${on.map(x=>`<option value="${esc(x.v)}" ${x.v===v?'selected':''}>${esc(x.l)}</option>`).join('')}</select>`;
+ else if(f.t==='combo')inp=`<input name="${f.k}" list="dl_${f.k}" value="${esc(v)}"><datalist id="dl_${f.k}">${on.map(x=>`<option value="${esc(x.v)}">`).join('')}</datalist>`;
+ else inp=`<input name="${f.k}" type="${f.t==='date'?'date':'text'}" value="${esc(v)}">`;
+ return `<label>${f.l}${f.req?' *':''}${inp}${f.help?`<span class="help">${esc(f.help)}</span>`:''}</label>`;
+}
+function openForm(ek,id,def){
+ const E=ENT[ek];const old=id?get(E.c,id):null;const rec=old||def||{};
+ const f=E.f.filter(x=>!(x.only==='new'&&old)&&!(x.only==='edit'&&!old));
+ const dlg=$('#dlg');
+ dlg.innerHTML=`<form id="frm" data-e="${ek}" data-id="${id||''}" novalidate><h2>${old?'Edit':'Add'} ${E.n}${old?' '+old.id:''}</h2><div id="ferr"></div>${f.map(x=>fieldHtml(x,rec[x.k])).join('')}
+ ${old?`<p class="small mut">Entered by ${esc(old.enteredBy)} · created ${old.created.slice(0,16).replace('T',' ')} · updated ${old.updated.slice(0,16).replace('T',' ')}</p>`:`<p class="small mut">Will be entered by ${esc(db.user)}. The accountable POC is chosen separately.</p>`}
+ <div class="row"><button class="b" type="submit">Save</button><button class="b alt" type="button" data-act="cancel">Cancel</button></div>
+ ${old?`<div class="hist"><b>History</b>${db.history.filter(h=>h.id===old.id).slice(0,8).map(h=>`<div>${h.ts.slice(0,10)}: ${esc(h.field)} ${esc(h.from)} → ${esc(h.to)}${h.reason?' ('+esc(h.reason)+')':''}</div>`).join('')||'<div>No changes logged.</div>'}</div>`:''}</form>`;
+ dlg.showModal();
+}
+document.addEventListener('submit',e=>{
+ if(e.target.id!=='frm')return;e.preventDefault();
+ const fm=e.target,ek=fm.dataset.e,id=fm.dataset.id,E=ENT[ek];const old=id?get(E.c,id):null;
+ const n=old?{...old}:{};
+ for(const f of E.f){const el=fm.elements[f.k];if(el)n[f.k]=el.value.trim()}
+ const err=(msg)=>{$('#ferr').innerHTML=`<div class="err">${esc(msg)}</div>`};
+ for(const f of E.f){if(f.req&&fm.elements[f.k]&&!n[f.k])return err('Please fill in: '+f.l)}
+ const files=fm.elements._files?[...fm.elements._files.files].map(f=>'Attachment: '+f.name+' (name only; file not stored)'):[];
+ if(files.length)n.evidence=[n.evidence,...files].filter(Boolean).join('\n');
+ if(E.pre)E.pre(n,old,!old);
+ const m=E.v&&E.v(n,old);if(m)return err(m);
+ const reason=n._reason||'';delete n._reason;
+ const ts=nowIso();
+ if(old){
+  E.tr.forEach(k=>{if(String(old[k]||'')!==String(n[k]||''))hist(old.id,k,old[k],n[k],k==='due'?reason:'')});
+  Object.assign(old,n,{updated:ts});
+ }else{
+  n.id=nid(E.p);n.created=ts;n.updated=ts;n.enteredBy=db.user;db[E.c].push(n);hist(n.id,'created','', '',E.n);
+ }
+ save();$('#dlg').close();render();
+});
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT'||(b.tagName==='INPUT'&&b.type!=='checkbox')||b.tagName==='TEXTAREA')return;
+ const a=b.dataset.act,id=b.dataset.id;
+ if(a==='nav'){e.preventDefault();view=b.dataset.v;render()}
+ else if(a==='add')openForm(b.dataset.e,null,b.dataset.e==='action'?{status:'Open',priority:'Medium'}:b.dataset.e==='waste'?{shipDone:'No',review:'Not started',owner:db.user}:b.dataset.e==='assess'?{date:TODAY(),owner:''}:b.dataset.e==='task'?{owner:db.user,due:TODAY()}:b.dataset.e==='train'?{}:{});
+ else if(a==='addtask')openForm('task',null,{owner:db.user,due:TODAY()});
+ else if(a==='edit')openForm(b.dataset.e,id);
+ else if(a==='cancel')$('#dlg').close();
+ else if(a==='newfinding'){const s=get('assess',id);openForm('finding',null,{assessId:id,title:s.condition.slice(0,60)})}
+ else if(a==='newaction')openForm('action',null,{findingId:id,status:'Open',priority:'Medium'});
+ else if(a==='top'){const t=get('tasks',id);if(!t.top&&db.tasks.filter(x=>x.top&&!x.done).length>=3){alert('You already have three top priorities. Un-star one first.');return}t.top=!t.top;save();render()}
+ else if(a==='carry'){db.tasks.filter(t=>!t.done&&t.workDate<TODAY()).forEach(t=>{hist(t.id,'planned for',t.workDate,TODAY(),'Carried forward. Due date unchanged ('+t.due+').');t.workDate=TODAY();t.updated=nowIso()});save();render()}
+ else if(a==='stdlist'){['Check email and messages from POCs','Review corrective actions due this week','Check waste documents waiting to be received','Write daily notes'].forEach(title=>{if(!db.tasks.some(t=>t.title===title&&t.due===TODAY())){const ts=nowIso();db.tasks.push({id:nid('TSK'),created:ts,updated:ts,enteredBy:db.user,title,due:TODAY(),workDate:TODAY(),program:'',owner:db.user,notes:'Standard daily item',done:false,top:false,doneDate:''})}});save();render()}
+ else if(a==='filclear'){FIL[b.dataset.k]={};render()}
+ else if(a==='print')window.print();
+ else if(a==='csv')csvOut();
+ else if(a==='reset'){if(confirm('Replace all data with fresh sample data?')){db=seed();save();render()}}
+});
+document.addEventListener('change',e=>{
+ const el=e.target,a=el.dataset.act;if(!a)return;
+ if(a==='done'){const t=get('tasks',el.dataset.id);t.done=el.checked;t.doneDate=el.checked?TODAY():'';if(el.checked)t.top=false;t.updated=nowIso();hist(t.id,'done',!el.checked,el.checked);save();render()}
+ else if(a==='setupstat'){const s=get('setup',el.dataset.id);hist(s.id,'status',s.status,el.value);s.status=el.value;s.updated=nowIso();save();render()}
+ else if(a==='rp'){RP[el.dataset.f]=el.value;render()}
+ else if(a==='fil'&&el.tagName!=='TEXTAREA'&&el.type!=='text'){(FIL[el.dataset.k]=FIL[el.dataset.k]||{})[el.dataset.f]=el.value;render()}
+ else if(a==='note'){const t=TODAY();db.notes[t]=db.notes[t]||{};db.notes[t][el.dataset.k]=el.value;save()}
+ else if(a==='mgmt'){db.mgmt[el.dataset.k]=el.value;save()}
+});
+document.addEventListener('input',e=>{
+ const el=e.target;if(el.dataset.act==='fil'&&el.type==='text'){(FIL[el.dataset.k]=FIL[el.dataset.k]||{})[el.dataset.f]=el.value;render()}
+});
+render();
+</script>
+</body>
+</html>
