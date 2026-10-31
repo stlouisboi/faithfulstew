@@ -72,6 +72,7 @@ const fmt=d=>{const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(
 const TODAY=()=>fmt(new Date());
 const off=n=>{const d=new Date();d.setDate(d.getDate()+n);return fmt(d)};
 const nowIso=()=>new Date().toISOString();
+function toast(m){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14532d;color:#fff;padding:10px 16px;border-radius:8px;z-index:99';document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}
 const daysLate=(due,asOf)=>Math.round((new Date(asOf||TODAY())-new Date(due))/864e5);
 const PROGRAMS=['Hazardous waste','Pharmaceutical waste','Regulated medical waste','Asbestos','Air quality','Stormwater / water','Chemical safety','Training','Other'];
 const LOCATIONS=['Main Building','Boiler Plant','Loading Dock','Outpatient Clinic','Maintenance Shop','Other'];
@@ -83,7 +84,7 @@ const CLOSED='Verified closed';
 /* ---------- state ---------- */
 let db=load();
 function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return seed()}
-function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 function nid(p){db.seq[p]=(db.seq[p]||0)+1;return p+'-'+String(db.seq[p]).padStart(3,'0')}
 const get=(coll,id)=>db[coll].find(r=>r.id===id);
 function hist(id,field,from,to,reason){db.history.unshift({ts:nowIso(),id,field,from:from==null?'':String(from),to:to==null?'':String(to),reason:reason||'',by:db.user})}
@@ -407,7 +408,8 @@ function csvOut(){
  lines.push(rp.cols.map(q).join(','));rp.rows.forEach(r=>lines.push(r.cells.map(q).join(',')));
  lines.push('',['Supporting record IDs',rp.ids.join('; ')].map(q).join(','));
  if(RP.kind==='mgmt'){lines.push(['Decisions needed',db.mgmt.decisions].map(q).join(','),['Resources needed',db.mgmt.resources].map(q).join(','))}
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));a.download=RP.kind+'_'+RP.from+'_to_'+RP.to+'.csv';a.click();
+ const txt=lines.join('\n');try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'}));a.download=RP.kind+'_'+RP.from+'_to_'+RP.to+'.csv';a.click()}catch(e){}
+ const dlg=$('#dlg');dlg.innerHTML='<h2>CSV</h2><p class="small mut">If no file downloaded, copy this text into a .csv file.</p><textarea style="height:260px" readonly>'+esc(txt)+'</textarea><div class="row"><button class="b alt" data-act="cancel">Close</button></div>';dlg.showModal();
 }
 
 /* ---------- forms ---------- */
@@ -464,13 +466,13 @@ document.addEventListener('click',e=>{
  else if(a==='cancel')$('#dlg').close();
  else if(a==='newfinding'){const s=get('assess',id);openForm('finding',null,{assessId:id,title:s.condition.slice(0,60)})}
  else if(a==='newaction')openForm('action',null,{findingId:id,status:'Open',priority:'Medium'});
- else if(a==='top'){const t=get('tasks',id);if(!t.top&&db.tasks.filter(x=>x.top&&!x.done).length>=3){alert('You already have three top priorities. Un-star one first.');return}t.top=!t.top;save();render()}
+ else if(a==='top'){const t=get('tasks',id);if(!t.top&&db.tasks.filter(x=>x.top&&!x.done).length>=3){toast('You already have three top priorities. Un-star one first.');return}t.top=!t.top;save();render()}
  else if(a==='carry'){db.tasks.filter(t=>!t.done&&t.workDate<TODAY()).forEach(t=>{hist(t.id,'planned for',t.workDate,TODAY(),'Carried forward. Due date unchanged ('+t.due+').');t.workDate=TODAY();t.updated=nowIso()});save();render()}
  else if(a==='stdlist'){['Check email and messages from POCs','Review corrective actions due this week','Check waste documents waiting to be received','Write daily notes'].forEach(title=>{if(!db.tasks.some(t=>t.title===title&&t.due===TODAY())){const ts=nowIso();db.tasks.push({id:nid('TSK'),created:ts,updated:ts,enteredBy:db.user,title,due:TODAY(),workDate:TODAY(),program:'',owner:db.user,notes:'Standard daily item',done:false,top:false,doneDate:''})}});save();render()}
  else if(a==='filclear'){FIL[b.dataset.k]={};render()}
- else if(a==='print')window.print();
+ else if(a==='print'){try{window.print()}catch(e){}toast('If nothing happened, open this app as a downloaded file to print.')}
  else if(a==='csv')csvOut();
- else if(a==='reset'){if(confirm('Replace all data with fresh sample data?')){db=seed();save();render()}}
+ else if(a==='reset'){if(b.dataset.sure){db=seed();save();render()}else{b.dataset.sure=1;b.textContent='Click again to confirm';setTimeout(()=>{b.dataset.sure='';b.textContent='Reset sample data'},4000)}}
 });
 document.addEventListener('change',e=>{
  const el=e.target,a=el.dataset.act;if(!a)return;
